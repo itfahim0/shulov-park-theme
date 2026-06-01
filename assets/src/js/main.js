@@ -17,13 +17,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // 0. HERO SLIDER SWIPER INITIALIZATION
     // ==========================================
     const initHeroSlider = function() {
-        if (typeof Swiper !== 'undefined') {
-            new Swiper('.hero-slider', {
+        const swiperLib = window.Swiper || (typeof Swiper !== 'undefined' ? Swiper : null);
+        
+        if (swiperLib) {
+            console.log("Shulov Park: Swiper library detected. Initializing hero slider...");
+            new swiperLib('.hero-slider', {
                 loop: true,
                 speed: 800,
+                observer: true,       // Watches for changes in slide elements
+                observeParents: true, // Watches for parent elements dimension adjustments
                 autoplay: {
-                    delay: 5000, // 5 seconds autoplay interval
+                    delay: 4000,      // Slides every 4 seconds
                     disableOnInteraction: false,
+                    pauseOnMouseEnter: false // Keeps sliding even if hovered
                 },
                 pagination: {
                     el: '.swiper-pagination',
@@ -38,8 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     crossFade: true
                 }
             });
+            console.log("Shulov Park: Hero slider autoplay successfully initialized.");
         } else {
             // Retry in 100ms if Swiper script is still executing asynchronously
+            console.log("Shulov Park: Waiting for Swiper library to load...");
             setTimeout(initHeroSlider, 100);
         }
     };
