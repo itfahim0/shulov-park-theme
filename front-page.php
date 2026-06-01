@@ -104,10 +104,8 @@ $shop_url = class_exists( 'WooCommerce' ) ? esc_url( wc_get_page_permalink( 'sho
             );
 
             foreach ( $featured_categories as $cat ) :
-                $cat_url = class_exists( 'WooCommerce' ) ? esc_url( get_term_link( $cat['slug'], 'product_cat' ) ) : '#';
-                if ( is_wp_error( $cat_url ) ) {
-                    $cat_url = $shop_url . '?product_cat=' . $cat['slug'];
-                }
+                $cat_link = class_exists( 'WooCommerce' ) ? get_term_link( $cat['slug'], 'product_cat' ) : '#';
+                $cat_url  = ( ! is_wp_error( $cat_link ) && ! empty( $cat_link ) ) ? esc_url( $cat_link ) : $shop_url . '?product_cat=' . $cat['slug'];
                 ?>
                 <a href="<?php echo esc_url( $cat_url ); ?>" class="category-card p-5 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded-md flex flex-col items-center gap-3 hover:-translate-y-1.5 shadow-soft hover:shadow-hover hover:border-primary-light transition-smooth">
                     <div class="category-icon-wrapper w-14 h-14 rounded-full bg-primary/10 dark:bg-primary-light/10 text-primary dark:text-primary-light flex items-center justify-center text-xl transition-smooth">

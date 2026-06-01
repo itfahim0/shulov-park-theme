@@ -41,8 +41,9 @@ $is_dark = isset( $_COOKIE['theme_dark'] ) && $_COOKIE['theme_dark'] === 'yes';
                 if ( has_custom_logo() ) {
                     the_custom_logo();
                 } else {
-                    echo '<a href="' . esc_url( home_url( '/' ) ) . '" rel="home">';
-                    echo '<h1 class="site-title font-bold text-2xl text-primary dark:text-primary-light">' . esc_html( get_bloginfo( 'name' ) ) . '</h1>';
+                    $logo_url = get_template_directory_uri() . '/assets/images/logo.png';
+                    echo '<a href="' . esc_url( home_url( '/' ) ) . '" rel="home" class="block">';
+                    echo '<img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr( get_bloginfo( 'name' ) ) . '" class="max-h-16 w-auto object-contain" />';
                     echo '</a>';
                 }
                 ?>

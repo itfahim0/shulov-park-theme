@@ -30,7 +30,19 @@ $delivery_time  = shulov_get_setting( 'shulov_park_delivery_time', '২৪/৭ �
             
             <!-- Column 1: Contact Info & Socials -->
             <div class="footer-widget text-sm">
-                <h3 class="text-white font-bold text-lg mb-6 pb-2 border-b-2 border-accent border-solid max-w-[60px]">যোগাযোগ</h3>
+                <!-- Footer Brand Logo fallback -->
+                <div class="footer-logo mb-6">
+                    <?php 
+                    if ( has_custom_logo() ) {
+                        the_custom_logo();
+                    } else {
+                        $logo_url = get_template_directory_uri() . '/assets/images/logo.png';
+                        echo '<a href="' . esc_url( home_url( '/' ) ) . '" rel="home" class="block">';
+                        echo '<img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr( get_bloginfo( 'name' ) ) . '" class="max-h-14 w-auto object-contain brightness-0 invert" />';
+                        echo '</a>';
+                    }
+                    ?>
+                </div>
                 <p class="flex items-center gap-2 mb-3"><i class="fa-solid fa-location-dot text-accent"></i> <?php echo esc_html( $address ); ?></p>
                 <p class="flex items-center gap-2 mb-3"><i class="fa-solid fa-phone text-accent"></i> <?php echo esc_html( $phone ); ?></p>
                 <p class="flex items-center gap-2 mb-3"><i class="fa-solid fa-envelope text-accent"></i> <?php echo esc_html( $email ); ?></p>
