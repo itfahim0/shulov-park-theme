@@ -53,7 +53,7 @@ function shulov_park_enqueue_vite_assets() {
         wp_enqueue_script( 'vite-client', 'http://localhost:5173/@vite/client', array(), null, false );
         
         // Enqueue the entrypoint JS which loads our CSS dynamically in development
-        wp_enqueue_script( 'shulov-park-vite', 'http://localhost:5173/assets/src/js/main.js', array( 'jquery' ), null, true );
+        wp_enqueue_script( 'shulov-park-vite', 'http://localhost:5173/assets/src/js/main.js', array( 'jquery', 'swiper-js' ), null, true );
         
     } else {
         // --- PRODUCTION MODE (Compiled Dist Assets) ---
@@ -82,7 +82,7 @@ function shulov_park_enqueue_vite_assets() {
             
             // Enqueue primary production compiled JS
             $js_file = 'assets/dist/' . $main_asset['file'];
-            wp_enqueue_script( 'shulov-park-prod-js', $theme_dir . '/' . $js_file, array( 'jquery' ), SHULOV_PARK_VERSION, true );
+            wp_enqueue_script( 'shulov-park-prod-js', $theme_dir . '/' . $js_file, array( 'jquery', 'swiper-js' ), SHULOV_PARK_VERSION, true );
             
             // Enqueue production compiled CSS (Vite extracts imported CSS into CSS chunk arrays)
             if ( ! empty( $main_asset['css'] ) ) {
@@ -94,7 +94,7 @@ function shulov_park_enqueue_vite_assets() {
         } else {
             // Disaster recovery fallback: If Vite is not running and manifest fails, load theme stylesheet if available
             wp_enqueue_style( 'shulov-park-fallback-css', $theme_dir . '/assets/dist/css/main.css', array(), SHULOV_PARK_VERSION );
-            wp_enqueue_script( 'shulov-park-fallback-js', $theme_dir . '/assets/dist/js/main.js', array( 'jquery' ), SHULOV_PARK_VERSION, true );
+            wp_enqueue_script( 'shulov-park-fallback-js', $theme_dir . '/assets/dist/js/main.js', array( 'jquery', 'swiper-js' ), SHULOV_PARK_VERSION, true );
         }
     }
 
