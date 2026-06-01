@@ -14,6 +14,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const securityNonce = typeof shulovThemeVars !== 'undefined' ? shulovThemeVars.nonce : '';
 
     // ==========================================
+    // 0. HERO SLIDER SWIPER INITIALIZATION
+    // ==========================================
+    const initHeroSlider = function() {
+        if (typeof Swiper !== 'undefined') {
+            new Swiper('.hero-slider', {
+                loop: true,
+                speed: 800,
+                autoplay: {
+                    delay: 5000, // 5 seconds autoplay interval
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                effect: 'fade',
+                fadeEffect: {
+                    crossFade: true
+                }
+            });
+        } else {
+            // Retry in 100ms if Swiper script is still executing asynchronously
+            setTimeout(initHeroSlider, 100);
+        }
+    };
+    initHeroSlider();
+
+    // ==========================================
     // 1. STICKY HEADER TRANSITIONS
     // ==========================================
     const header = document.querySelector('.site-header');

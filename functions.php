@@ -100,35 +100,6 @@ function shulov_park_scripts() {
 
     // Swiper Javascript
     wp_enqueue_script( 'swiper-js', 'https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js', array(), '10.0.0', true );
-    
-    // Inline script to initialize Swiper slider
-    $swiper_init = "
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof Swiper !== 'undefined') {
-                var heroSwiper = new Swiper('.hero-slider', {
-                    loop: true,
-                    speed: 800,
-                    autoplay: {
-                        delay: 6000,
-                        disableOnInteraction: false,
-                    },
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true,
-                    },
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                    effect: 'fade',
-                    fadeEffect: {
-                        crossFade: true
-                    }
-                });
-            }
-        });
-    ";
-    wp_add_inline_script( 'swiper-js', $swiper_init );
 }
 endif;
 add_action( 'wp_enqueue_scripts', 'shulov_park_scripts' );
