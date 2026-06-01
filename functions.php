@@ -1,111 +1,188 @@
 <?php
 /**
- * Shulov Park functions and definitions
+ * Shulov Park Theme Functions & Setup Definitions
+ *
+ * @package Shulov_Park
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+if ( ! defined( 'SHULOV_PARK_VERSION' ) ) {
+    define( 'SHULOV_PARK_VERSION', '2.1.0' );
 }
 
 /**
- * Theme Setup
+ * 1. THEME BASIC SETUP
  */
+if ( ! function_exists( 'shulov_park_setup' ) ) :
 function shulov_park_setup() {
-	// Add default posts and comments RSS feed links to head.
-	add_theme_support( 'automatic-feed-links' );
+    // Add default posts and comments RSS feed links to head.
+    add_theme_support( 'automatic-feed-links' );
 
-	// Let WordPress manage the document title.
-	add_theme_support( 'title-tag' );
+    // Let WordPress manage the document title.
+    add_theme_support( 'title-tag' );
 
-	// Enable support for Post Thumbnails on posts and pages.
-	add_theme_support( 'post-thumbnails' );
+    // Enable support for Post Thumbnails on posts and pages.
+    add_theme_support( 'post-thumbnails' );
 
-	// This theme uses wp_nav_menu() in one location.
-	register_nav_menus(
-		array(
-			'menu-1' => esc_html__( 'Primary Menu', 'shulov-park' ),
-			'footer' => esc_html__( 'Footer Menu', 'shulov-park' ),
-		)
-	);
+    // Enable custom logo support
+    add_theme_support( 'custom-logo', array(
+        'height'      => 80,
+        'width'       => 220,
+        'flex-width'  => true,
+        'flex-height' => true,
+    ) );
 
-	// WooCommerce support
-	add_theme_support( 'woocommerce', array(
-		'thumbnail_image_width' => 300,
-		'gallery_thumbnail_image_width' => 100,
-		'single_image_width' => 600,
-	) );
-	
-	add_theme_support( 'wc-product-gallery-zoom' );
-	add_theme_support( 'wc-product-gallery-lightbox' );
-	add_theme_support( 'wc-product-gallery-slider' );
+    // Register Nav Menus
+    register_nav_menus(
+        array(
+            'primary' => esc_html__( 'Primary Menu', 'shulov-park' ),
+            'footer'  => esc_html__( 'Footer Menu', 'shulov-park' ),
+        )
+    );
+
+    // Add support for core custom backgrounds, HTML5 markup, selective refresh.
+    add_theme_support( 'html5', array(
+        'search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script'
+    ) );
+
+    // Declare WooCommerce support and options
+    add_theme_support( 'woocommerce', array(
+        'thumbnail_image_width' => 320,
+        'single_image_width'    => 600,
+        'product_grid'          => array(
+            'default_rows'    => 3,
+            'min_rows'        => 1,
+            'default_columns' => 4,
+            'min_columns'     => 1,
+            'max_columns'     => 6,
+        ),
+    ) );
+    
+    // Add default product gallery zoom, lightbox and slider supports
+    add_theme_support( 'wc-product-gallery-zoom' );
+    add_theme_support( 'wc-product-gallery-lightbox' );
+    add_theme_support( 'wc-product-gallery-slider' );
 }
+endif;
 add_action( 'after_setup_theme', 'shulov_park_setup' );
 
 /**
- * Enqueue scripts and styles.
+ * 2. ENQUEUE STYLES & SCRIPTS
  */
+if ( ! function_exists( 'shulov_park_scripts' ) ) :
 function shulov_park_scripts() {
-	// Fonts (Inter)
-	wp_enqueue_style( 'shulov-park-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', array(), null );
-	
-	// Main Style
-	wp_enqueue_style( 'shulov-park-style', get_stylesheet_uri(), array(), wp_get_theme()->get('Version') );
+    // Google Fonts (Poppins for English, Hind Siliguri for Bangla)
+    wp_enqueue_style( 'shulov-park-fonts', 'https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap', array(), null );
+    
+    // FontAwesome Icons
+    wp_enqueue_style( 'font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', array(), '6.4.0' );
+    
+    // Swiper CSS (For premium hero slides and testimonials)
+    wp_enqueue_style( 'swiper-css', 'https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css', array(), '10.0.0' );
 
+    // Theme Main Stylesheet
+    wp_enqueue_style( 'shulov-park-style', get_stylesheet_uri(), array(), SHULOV_PARK_VERSION );
+
+    // Swiper Javascript
+    wp_enqueue_script( 'swiper-js', 'https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js', array(), '10.0.0', true );
+    
+    // Custom Theme Script
+    wp_enqueue_script( 'shulov-park-script', get_template_directory_uri() . '/assets/js/theme.js', array('jquery'), SHULOV_PARK_VERSION, true );
+    
+    // Inline script to initialize Swiper slider
+    $swiper_init = "
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Swiper !== 'undefined') {
+                var heroSwiper = new Swiper('.hero-slider', {
+                    loop: true,
+                    speed: 800,
+                    autoplay: {
+                        delay: 6000,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    effect: 'fade',
+                    fadeEffect: {
+                        crossFade: true
+                    }
+                });
+            }
+        });
+    ";
+    wp_add_inline_script( 'swiper-js', $swiper_init );
 }
+endif;
 add_action( 'wp_enqueue_scripts', 'shulov_park_scripts' );
 
 /**
- * Buy Now Button Customization
+ * 3. WOOCOMMERCE LAYOUT COMPATIBILITY
  */
-function shulov_park_redirect_to_checkout_after_buy_now( $url ) {
-	if ( isset( $_REQUEST['buy_now'] ) && $_REQUEST['buy_now'] == '1' ) {
-		return wc_get_checkout_url();
-	}
-	return $url;
-}
-add_filter( 'woocommerce_add_to_cart_redirect', 'shulov_park_redirect_to_checkout_after_buy_now', 9999 );
+// Remove default WooCommerce structural wrappers
+remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
+remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
 
-function shulov_park_loop_buy_now_button( $html, $product, $args ) {
-	if ( $product->is_type( 'simple' ) && $product->is_in_stock() ) {
-		$checkout_url = wc_get_checkout_url();
-		$buy_now_url = '?add-to-cart=' . $product->get_id() . '&buy_now=1';
-		
-		// Note: We intentionally DO NOT add the 'ajax_add_to_cart' class so it forces a page reload & redirect.
-		$html .= '<a href="' . esc_url( $buy_now_url ) . '" class="button btn-buy-now" style="margin-top:5px;">Buy Now</a>';
-	}
-	return $html;
+// Inject premium custom theme structural wrappers
+if ( ! function_exists( 'shulov_park_wrapper_start' ) ) :
+function shulov_park_wrapper_start() {
+    echo '<div class="container section-padding"><main id="main" class="site-main">';
 }
-add_filter( 'woocommerce_loop_add_to_cart_link', 'shulov_park_loop_buy_now_button', 10, 3 );
+endif;
+add_action( 'woocommerce_before_main_content', 'shulov_park_wrapper_start', 10 );
+
+if ( ! function_exists( 'shulov_park_wrapper_end' ) ) :
+function shulov_park_wrapper_end() {
+    echo '</main></div>';
+}
+endif;
+add_action( 'woocommerce_after_main_content', 'shulov_park_wrapper_end', 10 );
 
 /**
- * Customizer Options for Footer Payment Details
+ * 4. DYNAMIC AJAX MINI-CART UPDATE
+ * Automatically updates cart item counts in the header via AJAX.
  */
-function shulov_park_customize_register( $wp_customize ) {
-	$wp_customize->add_section( 'shulov_park_footer_options', array(
-		'title'       => __( 'Footer Options', 'shulov-park' ),
-		'priority'    => 130,
-	) );
-
-	// Accepted Payments Text
-	$wp_customize->add_setting( 'footer_payment_text', array(
-		'default'   => 'Accepted Payments:',
-		'transport' => 'refresh',
-	) );
-	$wp_customize->add_control( 'footer_payment_text', array(
-		'label'    => __( 'Payment Text', 'shulov-park' ),
-		'section'  => 'shulov_park_footer_options',
-		'type'     => 'text',
-	) );
-
-	// Support Phone
-	$wp_customize->add_setting( 'footer_support_phone', array(
-		'default'   => '+880 1234-567890',
-		'transport' => 'refresh',
-	) );
-	$wp_customize->add_control( 'footer_support_phone', array(
-		'label'    => __( 'Support Phone', 'shulov-park' ),
-		'section'  => 'shulov_park_footer_options',
-		'type'     => 'text',
-	) );
+if ( ! function_exists( 'shulov_park_cart_count_fragments' ) ) :
+function shulov_park_cart_count_fragments( $fragments ) {
+    ob_start();
+    ?>
+    <span class="cart-count"><?php echo esc_html( WC()->cart->get_cart_contents_count() ); ?></span>
+    <?php
+    $fragments['span.cart-count'] = ob_get_clean();
+    return $fragments;
 }
-add_action( 'customize_register', 'shulov_park_customize_register' );
+endif;
+add_filter( 'woocommerce_add_to_cart_fragments', 'shulov_park_cart_count_fragments' );
+
+/**
+ * 5. RETRIEVE YITH WISHLIST ITEM COUNT
+ */
+if ( ! function_exists( 'shulov_park_get_wishlist_count' ) ) :
+function shulov_park_get_wishlist_count() {
+    if ( function_exists( 'yith_wcwl_count_products' ) ) {
+        return yith_wcwl_count_products();
+    }
+    return 0;
+}
+endif;
+
+/**
+ * 6. CUSTOM STYLING OVERRIDES FOR THEME UTILITIES
+ */
+// Set default currency symbol to Bangladesh Taka (৳)
+add_filter( 'woocommerce_currency_symbol', 'shulov_park_bdt_currency_symbol', 10, 2 );
+function shulov_park_bdt_currency_symbol( $currency_symbol, $currency ) {
+    if ( $currency === 'BDT' ) {
+        return '৳';
+    }
+    return $currency_symbol;
+}
+
+/**
+ * 7. THEME CUSTOMIZER CONFIGURATIONS
+ */
+require get_template_directory() . '/inc/customizer.php';

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This is a standard WordPress WXR file containing demo products for Shulov Park grocery store -->
+<rss version="2.0"
+	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/commentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:wp="http://wordpress.org/export/1.2/"
+>
+<channel>
+	<title>Shulov Park</title>
+	<link>https://shulovpark.com</link>
+	<description>Premium WooCommerce Grocery Store</description>
+	<pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate>
+	<language>bn-BD</language>
+	<wp:wxr_version>1.2</wp:wxr_version>
+	<wp:base_site_url>https://shulovpark.com</wp:base_site_url>
+	<wp:base_blog_url>https://shulovpark.com</wp:base_blog_url>
+
+	<!-- Term: Product Category Grocery -->
+	<wp:term>
+		<wp:term_id>10</wp:term_id>
+		<wp:term_taxonomy>product_cat</wp:wp:term_taxonomy>
+		<wp:term_slug>grocery</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[গ্রোসারি]]></wp:term_name>
+	</wp:term>
+
+	<!-- Term: Product Category Vegetables -->
+	<wp:term>
+		<wp:term_id>11</wp:term_id>
+		<wp:term_taxonomy>product_cat</wp:wp:term_taxonomy>
+		<wp:term_slug>vegetables</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[তাজা সবজি]]></wp:term_name>
+	</wp:term>
+
+	<!-- Term: Product Category Dairy -->
+	<wp:term>
+		<wp:term_id>12</wp:term_id>
+		<wp:term_taxonomy>product_cat</wp:wp:term_taxonomy>
+		<wp:term_slug>dairy</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[দুগ্ধজাত পণ্য]]></wp:term_name>
+	</wp:term>
+
+	<!-- Product 1: Chinigura Rice -->
+	<item>
+		<title>প্রিমিয়াম চিনিগুড়া চাল (Chinigura Rice) - ২ কেজি</title>
+		<link>https://shulovpark.com/product/premium-chinigura-rice/</link>
+		<pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://shulovpark.com/?post_type=product&#38;p=101</guid>
+		<description></description>
+		<content:encoded><![CDATA[আমাদের চিনিগুড়া চাল সম্পূর্ণ প্রাকৃতিকভাবে চাষকৃত এবং ঝরঝরে সুগন্ধি পোলাও রান্নার জন্য সেরা মানের চিনিগুড়া চাল।]]></content:encoded>
+		<excerpt:encoded><![CDATA[সেরা সুগন্ধি চিনিগুড়া চাল ২ কেজি প্যাক।]]></excerpt:encoded>
+		<wp:post_id>101</wp:post_id>
+		<wp:post_date><![CDATA[2026-06-02 00:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-06-02 00:00:00]]></wp:post_date_gmt>
+		<wp:comment_status><![CDATA[open]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[premium-chinigura-rice]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[product]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="product_cat" nicename="grocery"><![CDATA[গ্রোসারি]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_visibility]]></wp:meta_key>
+			<wp:meta_value><![CDATA[visible]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_stock_status]]></wp:meta_key>
+			<wp:meta_value><![CDATA[instock]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[280]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_regular_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[300]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_sale_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[280]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_featured]]></wp:meta_key>
+			<wp:meta_value><![CDATA[yes]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+
+	<!-- Product 2: Pure Mustard Oil -->
+	<item>
+		<title>গাছি ঘানি ভাঙা খাঁটি সর্ষের তেল (Pure Mustard Oil) - ১ লিটার</title>
+		<link>https://shulovpark.com/product/pure-mustard-oil/</link>
+		<pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://shulovpark.com/?post_type=product&#38;p=102</guid>
+		<description></description>
+		<content:encoded><![CDATA[দেশী সর্ষে বীজ থেকে কাঠের ঘানিতে ভাঙানো সম্পূর্ণ কেমিক্যাল মুক্ত ও ঝাঝালো খাঁটি সর্ষের তেল।]]></content:encoded>
+		<excerpt:encoded><![CDATA[১০০% খাঁটি কাঠের ঘানি ভাঙা সর্ষের তেল।]]></excerpt:encoded>
+		<wp:post_id>102</wp:post_id>
+		<wp:post_date><![CDATA[2026-06-02 00:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-06-02 00:00:00]]></wp:post_date_gmt>
+		<wp:comment_status><![CDATA[open]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[pure-mustard-oil]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[product]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="product_cat" nicename="grocery"><![CDATA[গ্রোসারি]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_visibility]]></wp:meta_key>
+			<wp:meta_value><![CDATA[visible]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_stock_status]]></wp:meta_key>
+			<wp:meta_value><![CDATA[instock]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[340]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_regular_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[360]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_sale_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[340]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_featured]]></wp:meta_key>
+			<wp:meta_value><![CDATA[yes]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+
+	<!-- Product 3: Organic Egg -->
+	<item>
+		<title>অর্গানিক লাল ডিম (Organic Brown Eggs) - ১২ পিস</title>
+		<link>https://shulovpark.com/product/organic-brown-eggs/</link>
+		<pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://shulovpark.com/?post_type=product&#38;p=103</guid>
+		<description></description>
+		<content:encoded><![CDATA[সম্পূর্ণ প্রাকৃতিক ও পুষ্টিকর খাবার খেয়ে বড় হওয়া ফার্মের স্বাস্থ্যকর লাল ডিম। পুষ্টিগুণে ভরপুর।]]></content:encoded>
+		<excerpt:encoded><![CDATA[পুষ্টিকর ও তাজা অর্গানিক লাল ডিম ১২ পিস বক্স।]]></excerpt:encoded>
+		<wp:post_id>103</wp:post_id>
+		<wp:post_date><![CDATA[2026-06-02 00:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-06-02 00:00:00]]></wp:post_date_gmt>
+		<wp:comment_status><![CDATA[open]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[organic-brown-eggs]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[product]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="product_cat" nicename="dairy"><![CDATA[দুগ্ধজাত পণ্য]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_visibility]]></wp:meta_key>
+			<wp:meta_value><![CDATA[visible]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_stock_status]]></wp:meta_key>
+			<wp:meta_value><![CDATA[instock]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[155]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_regular_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[155]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+
+	<!-- Product 4: Organic Milk -->
+	<item>
+		<title>খাঁটি গাভীর তরল দুধ (Pure Cow Milk) - ১ লিটার</title>
+		<link>https://shulovpark.com/product/pure-cow-milk/</link>
+		<pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://shulovpark.com/?post_type=product&#38;p=104</guid>
+		<description></description>
+		<content:encoded><![CDATA[সরাসরি ডেইরি ফার্ম থেকে সংগৃহীত কোনো প্রকার প্রিজারভেটিভ ছাড়া ১০০% খাঁটি গাভীর ঘন তরল দুধ।]]></content:encoded>
+		<excerpt:encoded><![CDATA[খাঁটি তরল গাভীর দুধ ১ লিটার প্যাক।]]></excerpt:encoded>
+		<wp:post_id>104</wp:post_id>
+		<wp:post_date><![CDATA[2026-06-02 00:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-06-02 00:00:00]]></wp:post_date_gmt>
+		<wp:comment_status><![CDATA[open]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[pure-cow-milk]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[product]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="product_cat" nicename="dairy"><![CDATA[দুগ্ধজাত পণ্য]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_visibility]]></wp:meta_key>
+			<wp:meta_value><![CDATA[visible]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_stock_status]]></wp:meta_key>
+			<wp:meta_value><![CDATA[instock]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[90]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_regular_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[95]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_sale_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[90]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+
+	<!-- Product 5: Fresh Potatoes -->
+	<item>
+		<title>দেশী তাজা গোল আলু (Fresh Round Potato) - ১ কেজি</title>
+		<link>https://shulovpark.com/product/fresh-potato-1kg/</link>
+		<pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://shulovpark.com/?post_type=product&#38;p=105</guid>
+		<description></description>
+		<content:encoded><![CDATA[সম্পূর্ণ ফ্রেশ এবং বাছাইকৃত বড় গোল সাইজের দেশী গোল আলু। কোনো পচা বা দাগ ছাড়া।]]></content:encoded>
+		<excerpt:encoded><![CDATA[বাছাইকৃত তাজা দেশী গোল আলু ১ কেজি প্যাক।]]></excerpt:encoded>
+		<wp:post_id>105</wp:post_id>
+		<wp:post_date><![CDATA[2026-06-02 00:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-06-02 00:00:00]]></wp:post_date_gmt>
+		<wp:comment_status><![CDATA[open]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[fresh-potato-1kg]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[product]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="product_cat" nicename="vegetables"><![CDATA[তাজা সবজি]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_visibility]]></wp:meta_key>
+			<wp:meta_value><![CDATA[visible]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_stock_status]]></wp:meta_key>
+			<wp:meta_value><![CDATA[instock]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[45]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_regular_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[50]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[_sale_price]]></wp:meta_key>
+			<wp:meta_value><![CDATA[45]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+</channel>
+</rss>
