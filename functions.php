@@ -1,6 +1,7 @@
 <?php
 /**
  * Shulov Park Theme Functions & Setup Definitions
+ * Modernized with Vite + Tailwind CSS and performance-optimized eCommerce components.
  *
  * @package Shulov_Park
  */
@@ -8,6 +9,14 @@
 if ( ! defined( 'SHULOV_PARK_VERSION' ) ) {
     define( 'SHULOV_PARK_VERSION', '2.1.0' );
 }
+
+/**
+ * 0. LOAD CORE MODERN ARCHITECTURE ENGINES
+ */
+require get_template_directory() . '/inc/vite-assets.php';
+require get_template_directory() . '/inc/acf-settings.php';
+require get_template_directory() . '/inc/ajax-actions.php';
+
 
 /**
  * 1. THEME BASIC SETUP
@@ -61,12 +70,19 @@ function shulov_park_setup() {
     add_theme_support( 'wc-product-gallery-zoom' );
     add_theme_support( 'wc-product-gallery-lightbox' );
     add_theme_support( 'wc-product-gallery-slider' );
+
+    // Add theme support for wide alignments (Gutenberg)
+    add_theme_support( 'align-wide' );
+    
+    // Make theme translation ready
+    load_theme_textdomain( 'shulov-park', get_template_directory() . '/languages' );
 }
 endif;
 add_action( 'after_setup_theme', 'shulov_park_setup' );
 
+
 /**
- * 2. ENQUEUE STYLES & SCRIPTS
+ * 2. ENQUEUE STYLES & SCRIPTS (Refactored)
  */
 if ( ! function_exists( 'shulov_park_scripts' ) ) :
 function shulov_park_scripts() {
@@ -79,14 +95,11 @@ function shulov_park_scripts() {
     // Swiper CSS (For premium hero slides and testimonials)
     wp_enqueue_style( 'swiper-css', 'https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css', array(), '10.0.0' );
 
-    // Theme Main Stylesheet
-    wp_enqueue_style( 'shulov-park-style', get_stylesheet_uri(), array(), SHULOV_PARK_VERSION );
+    // NOTE: Duplicate original style.css and theme.js asset enqueues are REMOVED here.
+    // They are securely handled dynamically by the Vite Dev Server and Compiled Hashed Assets inside inc/vite-assets.php
 
     // Swiper Javascript
     wp_enqueue_script( 'swiper-js', 'https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js', array(), '10.0.0', true );
-    
-    // Custom Theme Script
-    wp_enqueue_script( 'shulov-park-script', get_template_directory_uri() . '/assets/js/theme.js', array('jquery'), SHULOV_PARK_VERSION, true );
     
     // Inline script to initialize Swiper slider
     $swiper_init = "
@@ -120,6 +133,7 @@ function shulov_park_scripts() {
 endif;
 add_action( 'wp_enqueue_scripts', 'shulov_park_scripts' );
 
+
 /**
  * 3. WOOCOMMERCE LAYOUT COMPATIBILITY
  */
@@ -130,7 +144,7 @@ remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wra
 // Inject premium custom theme structural wrappers
 if ( ! function_exists( 'shulov_park_wrapper_start' ) ) :
 function shulov_park_wrapper_start() {
-    echo '<div class="container section-padding"><main id="main" class="site-main">';
+    echo '<div class="container py-8"><main id="main" class="site-main">';
 }
 endif;
 add_action( 'woocommerce_before_main_content', 'shulov_park_wrapper_start', 10 );
@@ -141,6 +155,7 @@ function shulov_park_wrapper_end() {
 }
 endif;
 add_action( 'woocommerce_after_main_content', 'shulov_park_wrapper_end', 10 );
+
 
 /**
  * 4. DYNAMIC AJAX MINI-CART UPDATE
@@ -158,17 +173,28 @@ function shulov_park_cart_count_fragments( $fragments ) {
 endif;
 add_filter( 'woocommerce_add_to_cart_fragments', 'shulov_park_cart_count_fragments' );
 
+
 /**
- * 5. RETRIEVE YITH WISHLIST ITEM COUNT
+ * 5. RETRIEVE YITH WISHLIST OR CUSTOM WISHLIST ITEM COUNT
  */
 if ( ! function_exists( 'shulov_park_get_wishlist_count' ) ) :
 function shulov_park_get_wishlist_count() {
+    // 1. Fallback to custom cookie wishlist count if active
+    if ( function_exists( 'shulov_park_get_custom_wishlist_count' ) ) {
+        $custom_count = shulov_park_get_custom_wishlist_count();
+        if ( $custom_count > 0 ) {
+            return $custom_count;
+        }
+    }
+    
+    // 2. Fallback to YITH WooCommerce Wishlist integration
     if ( function_exists( 'yith_wcwl_count_products' ) ) {
         return yith_wcwl_count_products();
     }
     return 0;
 }
 endif;
+
 
 /**
  * 6. CUSTOM STYLING OVERRIDES FOR THEME UTILITIES
@@ -182,7 +208,62 @@ function shulov_park_bdt_currency_symbol( $currency_symbol, $currency ) {
     return $currency_symbol;
 }
 
+
 /**
  * 7. THEME CUSTOMIZER CONFIGURATIONS
  */
 require get_template_directory() . '/inc/customizer.php';
+
+
+/**
+ * 8. ELITE LIGHTHOUSE PERFORMANCE OPTIMIZATIONS
+ * Targeting 90+ score on Mobile and Desktop audits.
+ */
+
+/**
+ * Preconnect to high-traffic DNS origins in HTML head
+ */
+function shulov_park_preconnect_dns() {
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com" />' . "\n";
+    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />' . "\n";
+    echo '<link rel="preconnect" href="https://cdnjs.cloudflare.com" />' . "\n";
+    echo '<link rel="preconnect" href="https://cdn.jsdelivr.net" />' . "\n";
+}
+add_action( 'wp_head', 'shulov_park_preconnect_dns', 2 );
+
+/**
+ * Dequeue Gutenberg Block Styles on standard WooCommerce front pages where not utilized
+ * Saves roughly 50-80KB of unused render-blocking CSS!
+ */
+function shulov_park_dequeue_unused_block_styles() {
+    if ( is_front_page() || is_shop() || is_product() || is_cart() || is_checkout() ) {
+        wp_dequeue_style( 'wp-block-library' );
+        wp_dequeue_style( 'wp-block-library-theme' );
+        wp_dequeue_style( 'wc-blocks-style' );
+    }
+}
+add_action( 'wp_enqueue_scripts', 'shulov_park_dequeue_unused_block_styles', 100 );
+
+/**
+ * Filter script loading to append defer="defer" to all enqueued non-critical scripts
+ * Reduces render-blocking resource blockages significantly!
+ */
+function shulov_park_defer_scripts( $tag, $handle, $src ) {
+    // Avoid deferring core jquery or admin panel scripts
+    if ( is_admin() ) {
+        return $tag;
+    }
+    
+    $non_critical_handles = array(
+        'swiper-js',
+        'shulov-park-prod-js',
+        'shulov-park-fallback-js'
+    );
+    
+    if ( in_array( $handle, $non_critical_handles, true ) ) {
+        return sprintf( "<script defer src=\"%s\" id=\"%s-js\"></script>\n", esc_url( $src ), esc_attr( $handle ) );
+    }
+    
+    return $tag;
+}
+add_filter( 'script_loader_tag', 'shulov_park_defer_scripts', 10, 3 );

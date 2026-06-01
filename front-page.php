@@ -1,79 +1,82 @@
 <?php
 /**
  * The front-page template file.
- * Handles the complete premium grocery storefront homepage layout.
+ * Refactored to utilize custom WP_Query loops with reusable product cards, Tailwind CSS grid systems, and settings engines.
  *
  * @package Shulov_Park
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+
 get_header();
 
-// Retrieve Customizer Dynamic deadline
-$flash_active   = get_theme_mod( 'shulov_park_flash_active', true );
-$flash_title    = get_theme_mod( 'shulov_park_flash_title', 'ফ্ল্যাশ সেল!' );
-$flash_subtitle = get_theme_mod( 'shulov_park_flash_subtitle', 'দারুণ সব অফার সীমিত সময়ের জন্য' );
-$flash_deadline = get_theme_mod( 'shulov_park_flash_date', date( 'Y-m-d\T23:59:59', strtotime( '+5 days' ) ) );
+// Retrieve settings/customizer values with dual fallbacks
+$flash_active   = shulov_get_setting( 'shulov_park_flash_active', true );
+$flash_title    = shulov_get_setting( 'shulov_park_flash_title', 'ফ্ল্যাশ সেল!' );
+$flash_subtitle = shulov_get_setting( 'shulov_park_flash_subtitle', 'দারুণ সব অফার সীমিত সময়ের জন্য' );
+$flash_deadline = shulov_get_setting( 'shulov_park_flash_date', date( 'Y-m-d\T23:59:59', strtotime( '+5 days' ) ) );
 
-$app_title = get_theme_mod( 'shulov_park_app_title', 'ঘরে বসেই কেনাকাটা করুন' );
-$app_desc  = get_theme_mod( 'shulov_park_app_desc', 'সহজে, দ্রুত, নিরাপদে আপনার প্রতিদিনের গ্রোসারি ও ডেইলি এসেনশিয়াল আইটেম অর্ডার করতে ডাউনলোড করুন শুলভ পার্ক অ্যাপ।' );
-$playstore = get_theme_mod( 'shulov_park_playstore', '#' );
-$appstore  = get_theme_mod( 'shulov_park_appstore', '#' );
+$app_title = shulov_get_setting( 'shulov_park_app_title', 'ঘরে বসেই কেনাকাটা করুন' );
+$app_desc  = shulov_get_setting( 'shulov_park_app_desc', 'সহজে, দ্রুত, নিরাপদে আপনার প্রতিদিনের গ্রোসারি ও ডেইলি এসেনশিয়াল আইটেম অর্ডার করতে ডাউনলোড করুন শুলভ পার্ক অ্যাপ।' );
+$playstore = shulov_get_setting( 'shulov_park_playstore', '#' );
+$appstore  = shulov_get_setting( 'shulov_park_appstore', '#' );
 
 $shop_url = class_exists( 'WooCommerce' ) ? esc_url( wc_get_page_permalink( 'shop' ) ) : '#';
 ?>
 
-<main id="primary" class="site-main">
+<main id="primary" class="site-main transition-smooth py-6">
 
     <!-- 1. HERO SLIDER SECTION (SWIPER JS) -->
-    <section class="container hero-slider-container">
+    <section class="container hero-slider-container mb-12">
         <div class="swiper hero-slider">
             <div class="swiper-wrapper">
                 
-                <!-- Slide 1 (Image 4: Deep Green / Gold Supermarket basket) -->
+                <!-- Slide 1 (Deep Green / Gold Supermarket basket) -->
                 <div class="swiper-slide">
-                    <a href="<?php echo $shop_url; ?>" class="hero-slide-item" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/hero-slide-4.png');">
+                    <a href="<?php echo $shop_url; ?>" class="hero-slide-item" style="background-image: url('<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/hero-slide-4.png');">
                         <div class="hero-slide-overlay"></div>
                         <div class="hero-slide-content">
-                            <!-- Accessibility & SEO Headings (Screen Reader only if banner text is graphic) -->
                             <h2 class="screen-reader-text">প্রতিদিনের কেনাকাটা হোক সহজ, সাশ্রয়ী ও নির্ভরযোগ্য</h2>
                             <p class="screen-reader-text">মানসম্মত পণ্য, সেরা দাম, দ্রুত ডেলিভারি</p>
-                            <span class="btn btn-accent">এখনই অর্ডার করুন <i class="fa-solid fa-arrow-right"></i></span>
+                            <span class="btn btn-accent border-none shadow-md">এখনই অর্ডার করুন <i class="fa-solid fa-arrow-right"></i></span>
                         </div>
                     </a>
                 </div>
 
-                <!-- Slide 2 (Image 2: fresh vegetables banner with basket) -->
+                <!-- Slide 2 (Fresh vegetables banner with basket) -->
                 <div class="swiper-slide">
-                    <a href="<?php echo $shop_url; ?>" class="hero-slide-item" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/hero-slide-1.jpg');">
+                    <a href="<?php echo $shop_url; ?>" class="hero-slide-item" style="background-image: url('<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/hero-slide-1.jpg');">
                         <div class="hero-slide-overlay"></div>
                         <div class="hero-slide-content">
                             <h2 class="screen-reader-text">আপনার প্রতিদিনের বিশ্বস্ত সঙ্গী</h2>
                             <p class="screen-reader-text">তাজা পণ্য, সেরা দাম, আপনার জন্য</p>
-                            <span class="btn btn-accent">পণ্য দেখুন <i class="fa-solid fa-arrow-right"></i></span>
+                            <span class="btn btn-accent border-none shadow-md">পণ্য দেখুন <i class="fa-solid fa-arrow-right"></i></span>
                         </div>
                     </a>
                 </div>
 
-                <!-- Slide 3 (Image 3: clean bag full of grocery fruits and vegetables) -->
+                <!-- Slide 3 (Clean bag full of grocery fruits and vegetables) -->
                 <div class="swiper-slide">
-                    <a href="<?php echo $shop_url; ?>" class="hero-slide-item light-bg" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/hero-slide-2.png');">
+                    <a href="<?php echo $shop_url; ?>" class="hero-slide-item light-bg" style="background-image: url('<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/hero-slide-2.png');">
                         <div class="hero-slide-overlay"></div>
                         <div class="hero-slide-content">
                             <h2 class="screen-reader-text">তাজা পণ্য, সুস্থ জীবন</h2>
                             <p class="screen-reader-text">নিত্যদিনের সকল প্রয়োজন এক ছাদের নিচে</p>
-                            <span class="btn btn-primary">ক্যাটাগরি দেখুন <i class="fa-solid fa-arrow-right"></i></span>
+                            <span class="btn btn-primary border-none shadow-md">ক্যাটাগরি দেখুন <i class="fa-solid fa-arrow-right"></i></span>
                         </div>
                     </a>
                 </div>
 
-                <!-- Slide 4 (Image 5: Yellow app promo slide) -->
+                <!-- Slide 4 (Yellow app promo slide) -->
                 <div class="swiper-slide">
-                    <a href="<?php echo $shop_url; ?>" class="hero-slide-item light-bg" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/hero-slide-3.png');">
+                    <a href="<?php echo $shop_url; ?>" class="hero-slide-item light-bg" style="background-image: url('<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/hero-slide-3.png');">
                         <div class="hero-slide-overlay"></div>
                         <div class="hero-slide-content">
                             <h2 class="screen-reader-text">ঘরে বসেই কেনাকাটা করুন</h2>
                             <p class="screen-reader-text">দ্রুত ডেলিভারি, নিরাপদ প্যাকেজিং</p>
-                            <span class="btn btn-primary">শপ নাও <i class="fa-solid fa-arrow-right"></i></span>
+                            <span class="btn btn-primary border-none shadow-md">শপ নাও <i class="fa-solid fa-arrow-right"></i></span>
                         </div>
                     </a>
                 </div>
@@ -85,120 +88,121 @@ $shop_url = class_exists( 'WooCommerce' ) ? esc_url( wc_get_page_permalink( 'sho
     </section>
 
     <!-- 2. FEATURED CATEGORIES SECTION -->
-    <section class="container section-padding">
-        <h2 class="section-title">পপুলার ক্যাটাগরি</h2>
-        <div class="categories-grid">
+    <section class="container mb-16">
+        <h2 class="section-title dark:text-white"><?php esc_html_e( 'পপুলার ক্যাটাগরি', 'shulov-park' ); ?></h2>
+        <div class="categories-grid grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
             <?php
-            // Array of 8 featured grocery categories with their custom FontAwesome icons
             $featured_categories = array(
-                array(
-                    'slug'  => 'grocery',
-                    'title' => 'গ্রোসারি',
-                    'icon'  => 'fa-basket-shopping'
-                ),
-                array(
-                    'slug'  => 'vegetables',
-                    'title' => 'তাজা সবজি',
-                    'icon'  => 'fa-carrot'
-                ),
-                array(
-                    'slug'  => 'fruits',
-                    'title' => 'ফলমূল',
-                    'icon'  => 'fa-apple-whole'
-                ),
-                array(
-                    'slug'  => 'dairy',
-                    'title' => 'দুগ্ধজাত পণ্য',
-                    'icon'  => 'fa-cow'
-                ),
-                array(
-                    'slug'  => 'beverages',
-                    'title' => 'পানীয়',
-                    'icon'  => 'fa-bottle-water'
-                ),
-                array(
-                    'slug'  => 'snacks',
-                    'title' => 'স্ন্যাকস',
-                    'icon'  => 'fa-cookie-bite'
-                ),
-                array(
-                    'slug'  => 'cosmetics',
-                    'title' => 'প্রসাধন',
-                    'icon'  => 'fa-soap'
-                ),
-                array(
-                    'slug'  => 'household',
-                    'title' => 'গৃহস্থালী',
-                    'icon'  => 'fa-broom'
-                ),
+                array( 'slug' => 'grocery', 'title' => 'গ্রোসারি', 'icon' => 'fa-basket-shopping' ),
+                array( 'slug' => 'vegetables', 'title' => 'তাজা সবজি', 'icon' => 'fa-carrot' ),
+                array( 'slug' => 'fruits', 'title' => 'ফলমূল', 'icon' => 'fa-apple-whole' ),
+                array( 'slug' => 'dairy', 'title' => 'দুগ্ধজাত পণ্য', 'icon' => 'fa-cow' ),
+                array( 'slug' => 'beverages', 'title' => 'পানীয়', 'icon' => 'fa-bottle-water' ),
+                array( 'slug' => 'snacks', 'title' => 'স্ন্যাকস', 'icon' => 'fa-cookie-bite' ),
+                array( 'slug' => 'cosmetics', 'title' => 'প্রসাধন', 'icon' => 'fa-soap' ),
+                array( 'slug' => 'household', 'title' => 'গৃহস্থালী', 'icon' => 'fa-broom' ),
             );
 
             foreach ( $featured_categories as $cat ) :
-                // Construct standard category archive URL
                 $cat_url = class_exists( 'WooCommerce' ) ? esc_url( get_term_link( $cat['slug'], 'product_cat' ) ) : '#';
                 if ( is_wp_error( $cat_url ) ) {
                     $cat_url = $shop_url . '?product_cat=' . $cat['slug'];
                 }
                 ?>
-                <a href="<?php echo $cat_url; ?>" class="category-card">
-                    <div class="category-icon-wrapper">
+                <a href="<?php echo esc_url( $cat_url ); ?>" class="category-card p-5 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded-md flex flex-col items-center gap-3 hover:-translate-y-1.5 shadow-soft hover:shadow-hover hover:border-primary-light transition-smooth">
+                    <div class="category-icon-wrapper w-14 h-14 rounded-full bg-primary/10 dark:bg-primary-light/10 text-primary dark:text-primary-light flex items-center justify-center text-xl transition-smooth">
                         <i class="fa-solid <?php echo esc_attr( $cat['icon'] ); ?>"></i>
                     </div>
-                    <span class="category-title"><?php echo esc_html( $cat['title'] ); ?></span>
+                    <span class="category-title text-sm font-semibold text-neutral-dark dark:text-white transition-smooth"><?php echo esc_html( $cat['title'] ); ?></span>
                 </a>
             <?php endforeach; ?>
         </div>
     </section>
 
-    <!-- 3. BEST SELLING PRODUCTS (DYNAMIC GRID) -->
-    <section class="container section-padding" style="background:var(--white); border-radius:var(--radius-lg); padding:50px 40px; box-shadow:var(--shadow-soft);">
-        <h2 class="section-title">বেস্ট সেলিং প্রোডাক্টস</h2>
+    <!-- 3. BEST SELLING PRODUCTS (DYNAMIC WP_QUERY LOOP) -->
+    <section class="container p-8 md:p-12 mb-16 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded-lg shadow-soft transition-smooth">
+        <h2 class="section-title dark:text-white"><?php esc_html_e( 'বেস্ট সেলিং প্রোডাক্টস', 'shulov-park' ); ?></h2>
+        
         <?php
         if ( class_exists( 'WooCommerce' ) ) {
-            // Render WooCommerce Best Selling loop using official shortcode
-            echo do_shortcode( '[products limit="8" columns="4" best_selling="true" visibility="featured"]' );
+            $best_selling_query = new WP_Query( array(
+                'post_type'      => 'product',
+                'posts_per_page' => 8,
+                'meta_key'       => 'total_sales',
+                'orderby'        => 'meta_value_num',
+                'order'          => 'DESC',
+            ) );
+
+            if ( $best_selling_query->have_posts() ) :
+                echo '<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">';
+                while ( $best_selling_query->have_posts() ) : $best_selling_query->the_post();
+                    global $product;
+                    $product = wc_get_product( get_the_ID() );
+                    get_template_part( 'template-parts/product/product-card' );
+                endwhile;
+                echo '</div>';
+                wp_reset_postdata();
+            else :
+                echo '<div class="text-center py-6 text-neutral-muted">' . esc_html__( 'কোনো প্রোডাক্ট পাওয়া যায়নি।', 'shulov-park' ) . '</div>';
+            endif;
         } else {
-            echo '<div style="text-align:center; padding: 20px; color:var(--text-muted); font-size:16px;">শপে পণ্য দেখতে WooCommerce সক্রিয় করুন।</div>';
+            echo '<div class="text-center py-6 text-neutral-muted">' . esc_html__( 'পণ্য প্রদর্শন করতে WooCommerce সক্রিয় করুন।', 'shulov-park' ) . '</div>';
         }
         ?>
     </section>
 
     <!-- 4. FLASH SALE SECTION (COUNTDOWN TIMER) -->
     <?php if ( $flash_active ) : ?>
-        <section class="container section-padding">
-            <div class="flash-sale-wrapper">
-                <div class="flash-sale-text">
-                    <h2 class="flash-sale-title"><?php echo esc_html( $flash_title ); ?></h2>
-                    <p class="flash-sale-subtitle"><?php echo esc_html( $flash_subtitle ); ?></p>
+        <section class="container mb-16">
+            <div class="flash-sale-wrapper p-8 md:p-12 bg-gradient-to-r from-primary to-primary-light dark:from-neutral-900 dark:to-neutral-800 border dark:border-neutral-800 rounded-lg flex justify-between items-center flex-wrap gap-8 shadow-soft relative overflow-hidden transition-smooth">
+                <div class="flash-sale-text relative z-10">
+                    <h2 class="flash-sale-title text-accent-light dark:text-primary-light font-bold text-3xl mb-2"><?php echo esc_html( $flash_title ); ?></h2>
+                    <p class="flash-sale-subtitle text-white dark:text-neutral-muted text-sm md:text-base"><?php echo esc_html( $flash_subtitle ); ?></p>
                 </div>
                 
-                <!-- Timer hook elements linking to custom JS -->
-                <div id="countdown" class="countdown-container" data-deadline="<?php echo esc_attr( $flash_deadline ); ?>">
-                    <div class="countdown-box">
-                        <span class="countdown-number day-num">00</span>
-                        <span class="countdown-label">দিন</span>
+                <!-- Countdown Box elements -->
+                <div id="countdown" class="countdown-container flex gap-3 relative z-10" data-deadline="<?php echo esc_attr( $flash_deadline ); ?>">
+                    <div class="countdown-box min-w-[70px] p-3 bg-white dark:bg-neutral-900 border dark:border-neutral-800 rounded shadow-md text-center hover:-translate-y-1 transition-smooth">
+                        <span class="countdown-number day-num text-xl md:text-2xl font-bold text-primary dark:text-primary-light leading-none mb-1">00</span>
+                        <span class="countdown-label text-[10px] text-neutral-muted block">দিন</span>
                     </div>
-                    <div class="countdown-box">
-                        <span class="countdown-number hour-num">00</span>
-                        <span class="countdown-label">ঘণ্টা</span>
+                    <div class="countdown-box min-w-[70px] p-3 bg-white dark:bg-neutral-900 border dark:border-neutral-800 rounded shadow-md text-center hover:-translate-y-1 transition-smooth">
+                        <span class="countdown-number hour-num text-xl md:text-2xl font-bold text-primary dark:text-primary-light leading-none mb-1">00</span>
+                        <span class="countdown-label text-[10px] text-neutral-muted block">ঘণ্টা</span>
                     </div>
-                    <div class="countdown-box">
-                        <span class="countdown-number min-num">00</span>
-                        <span class="countdown-label">মিনিট</span>
+                    <div class="countdown-box min-w-[70px] p-3 bg-white dark:bg-neutral-900 border dark:border-neutral-800 rounded shadow-md text-center hover:-translate-y-1 transition-smooth">
+                        <span class="countdown-number min-num text-xl md:text-2xl font-bold text-primary dark:text-primary-light leading-none mb-1">00</span>
+                        <span class="countdown-label text-[10px] text-neutral-muted block">মিনিট</span>
                     </div>
-                    <div class="countdown-box">
-                        <span class="countdown-number sec-num">00</span>
-                        <span class="countdown-label">সেকেন্ড</span>
+                    <div class="countdown-box min-w-[70px] p-3 bg-white dark:bg-neutral-900 border dark:border-neutral-800 rounded shadow-md text-center hover:-translate-y-1 transition-smooth">
+                        <span class="countdown-number sec-num text-xl md:text-2xl font-bold text-primary dark:text-primary-light leading-none mb-1">00</span>
+                        <span class="countdown-label text-[10px] text-neutral-muted block">সেকেন্ড</span>
                     </div>
                 </div>
             </div>
             
-            <!-- On Sale Products Row -->
-            <div style="margin-top: 35px;">
+            <!-- On Sale Products Row (Dynamic WP_Query) -->
+            <div class="mt-8">
                 <?php
                 if ( class_exists( 'WooCommerce' ) ) {
-                    // Render sale items dynamically
-                    echo do_shortcode( '[products limit="4" columns="4" on_sale="true"]' );
+                    $sale_ids = wc_get_product_ids_on_sale();
+                    
+                    $on_sale_query = new WP_Query( array(
+                        'post_type'      => 'product',
+                        'posts_per_page' => 4,
+                        'post__in'       => ! empty( $sale_ids ) ? $sale_ids : array( 0 ),
+                    ) );
+
+                    if ( $on_sale_query->have_posts() ) :
+                        echo '<div class="grid grid-cols-2 md:grid-cols-4 gap-6">';
+                        while ( $on_sale_query->have_posts() ) : $on_sale_query->the_post();
+                            global $product;
+                            $product = wc_get_product( get_the_ID() );
+                            get_template_part( 'template-parts/product/product-card' );
+                        endwhile;
+                        echo '</div>';
+                        wp_reset_postdata();
+                    endif;
                 }
                 ?>
             </div>
@@ -206,133 +210,119 @@ $shop_url = class_exists( 'WooCommerce' ) ? esc_url( wc_get_page_permalink( 'sho
     <?php endif; ?>
 
     <!-- 5. FEATURED BRANDS SECTION -->
-    <section class="container section-padding">
-        <h2 class="section-title">পপুলার ব্র্যান্ডস</h2>
-        <div class="brands-grid">
+    <section class="container mb-16">
+        <h2 class="section-title dark:text-white"><?php esc_html_e( 'পপুলার ব্র্যান্ডস', 'shulov-park' ); ?></h2>
+        <div class="brands-grid flex flex-wrap justify-between items-center gap-4">
             <?php
             $brands = array('Radhuni', 'Pran', 'Teer', 'Aarong', 'Fresh', 'Pushti');
             foreach ( $brands as $brand ) :
                 ?>
-                <div class="brand-card">
-                    <!-- Text representation or dummy logo styling -->
-                    <span style="font-weight:700; color:var(--text-muted); font-size:18px; letter-spacing:1px;"><?php echo esc_html($brand); ?></span>
+                <div class="brand-card flex-1 min-w-[140px] p-5 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded-md shadow-soft flex items-center justify-center hover:scale-105 hover:border-accent transition-smooth">
+                    <span class="font-bold text-neutral-muted dark:text-neutral-500 text-lg tracking-wider"><?php echo esc_html($brand); ?></span>
                 </div>
             <?php endforeach; ?>
         </div>
     </section>
 
     <!-- 6. WHY CHOOSE US BLOCK -->
-    <section class="container section-padding">
-        <h2 class="section-title">কেন আমরা সেরা?</h2>
-        <div class="why-us-grid">
-            <div class="why-card">
-                <i class="fa-solid fa-shield-halved why-icon"></i>
-                <h4 class="why-title">১০০% খাঁটি পণ্য</h4>
-                <p class="why-desc">সরাসরি উৎপাদক ও বিশ্বস্ত ডিস্ট্রিবিউটর থেকে সংগ্রহকৃত মূল পণ্য।</p>
+    <section class="container mb-16">
+        <h2 class="section-title dark:text-white"><?php esc_html_e( 'কেন আমরা সেরা?', 'shulov-park' ); ?></h2>
+        <div class="why-us-grid grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            <div class="why-card p-6 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded shadow-soft text-center hover:-translate-y-1 hover:border-primary-light transition-smooth">
+                <i class="fa-solid fa-shield-halved text-primary dark:text-primary-light text-3xl mb-4 transition-smooth"></i>
+                <h4 class="why-title text-sm font-semibold text-neutral-dark dark:text-white mb-2">১০০% খাঁটি পণ্য</h4>
+                <p class="why-desc text-xs text-neutral-muted dark:text-neutral-muted leading-relaxed">সরাসরি উৎপাদক ও বিশ্বস্ত ডিস্ট্রিবিউটর থেকে সংগ্রহকৃত মূল পণ্য।</p>
             </div>
-            <div class="why-card">
-                <i class="fa-solid fa-tags why-icon"></i>
-                <h4 class="why-title">সেরা দামের গ্যারান্টি</h4>
-                <p class="why-desc">অন্য যেকোনো সুপার শপ বা বাজার থেকে সাশ্রয়ী দামে সেরা জিনিস।</p>
+            <div class="why-card p-6 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded shadow-soft text-center hover:-translate-y-1 hover:border-primary-light transition-smooth">
+                <i class="fa-solid fa-tags text-primary dark:text-primary-light text-3xl mb-4 transition-smooth"></i>
+                <h4 class="why-title text-sm font-semibold text-neutral-dark dark:text-white mb-2">সেরা দামের গ্যারান্টি</h4>
+                <p class="why-desc text-xs text-neutral-muted dark:text-neutral-muted leading-relaxed">অন্য যেকোনো সুপার শপ বা বাজার থেকে সাশ্রয়ী দামে সেরা জিনিস।</p>
             </div>
-            <div class="why-card">
-                <i class="fa-solid fa-truck-fast why-icon"></i>
-                <h4 class="why-title">দ্রুত হোম ডেলিভারি</h4>
-                <p class="why-desc">ঢাকা শহরের যেকোনো প্রান্তে দ্রুত ও নিরাপদ হোম ডেলিভারি সুবিধা।</p>
+            <div class="why-card p-6 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded shadow-soft text-center hover:-translate-y-1 hover:border-primary-light transition-smooth">
+                <i class="fa-solid fa-truck-fast text-primary dark:text-primary-light text-3xl mb-4 transition-smooth"></i>
+                <h4 class="why-title text-sm font-semibold text-neutral-dark dark:text-white mb-2">দ্রুত হোম ডেলিভারি</h4>
+                <p class="why-desc text-xs text-neutral-muted dark:text-neutral-muted leading-relaxed">ঢাকা শহরের যেকোনো প্রান্তে দ্রুত ও নিরাপদ হোম ডেলিভারি সুবিধা।</p>
             </div>
-            <div class="why-card">
-                <i class="fa-solid fa-credit-card why-icon"></i>
-                <h4 class="why-title">নিরাপদ পেমেন্ট</h4>
-                <p class="why-desc">বিকাশ, নগদ, রকেট, কার্ড এবং ক্যাশ অন ডেলিভারি পেমেন্ট সুবিধা।</p>
+            <div class="why-card p-6 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded shadow-soft text-center hover:-translate-y-1 hover:border-primary-light transition-smooth">
+                <i class="fa-solid fa-credit-card text-primary dark:text-primary-light text-3xl mb-4 transition-smooth"></i>
+                <h4 class="why-title text-sm font-semibold text-neutral-dark dark:text-white mb-2">নিরাপদ পেমেন্ট</h4>
+                <p class="why-desc text-xs text-neutral-muted dark:text-neutral-muted leading-relaxed">বিকাশ, নগদ, রকেট, কার্ড এবং ক্যাশ অন ডেলিভারি পেমেন্ট সুবিধা।</p>
             </div>
-            <div class="why-card">
-                <i class="fa-solid fa-headset why-icon"></i>
-                <h4 class="why-title">২৪/৭ কাস্টমার সাপোর্ট</h4>
-                <p class="why-desc">যেকোনো প্রয়োজনে আমাদের কাস্টমার কেয়ার সর্বদা প্রস্তুত।</p>
+            <div class="why-card p-6 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded shadow-soft text-center hover:-translate-y-1 hover:border-primary-light transition-smooth">
+                <i class="fa-solid fa-headset text-primary dark:text-primary-light text-3xl mb-4 transition-smooth"></i>
+                <h4 class="why-title text-sm font-semibold text-neutral-dark dark:text-white mb-2">২৪/৭ কাস্টমার সাপোর্ট</h4>
+                <p class="why-desc text-xs text-neutral-muted dark:text-neutral-muted leading-relaxed">যেকোনো প্রয়োজনে আমাদের কাস্টমার কেয়ার সর্বদা প্রস্তুত।</p>
             </div>
         </div>
     </section>
 
     <!-- 7. TESTIMONIALS SECTION -->
-    <section class="container section-padding" style="background:#EBF3EF; border-radius:var(--radius-lg); padding:50px 40px; box-shadow:var(--shadow-soft);">
-        <h2 class="section-title">ক্রেতাদের মতামত</h2>
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <div class="testimonial-stars">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
+    <section class="container p-8 md:p-12 mb-16 bg-[#EBF3EF] dark:bg-neutral-800/40 border border-neutral-border/20 dark:border-neutral-800 rounded-lg shadow-soft transition-smooth">
+        <h2 class="section-title dark:text-white"><?php esc_html_e( 'ক্রেতাদের মতামত', 'shulov-park' ); ?></h2>
+        <div class="testimonials-grid grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="testimonial-card relative p-8 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded shadow-soft">
+                <div class="testimonial-stars text-accent-light text-xs mb-3">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                 </div>
-                <p class="testimonial-text">"শুলভ পার্কের পণ্য এবং ডেলিভারি সার্ভিস অসাধারণ! তাজা সবজি ও খাঁটি ঘি আমি নিয়মিত অর্ডার করি। কোয়ালিটি নিয়ে কোনো কমপ্লেন নেই।"</p>
-                <div class="testimonial-user">
-                    <div class="testimonial-avatar">ত</div>
-                    <div class="testimonial-name">তানভীর রহমান, ঢাকা</div>
+                <p class="testimonial-text text-sm italic text-neutral-dark dark:text-neutral-muted leading-relaxed mb-6">"শুলভ পার্কের পণ্য এবং ডেলিভারি সার্ভিস অসাধারণ! তাজা সবজি ও খাঁটি ঘি আমি নিয়মিত অর্ডার করি। কোয়ালিটি নিয়ে কোনো কমপ্লেন নেই।"</p>
+                <div class="testimonial-user flex items-center gap-3">
+                    <div class="testimonial-avatar w-10 h-10 rounded-full bg-primary/10 text-primary dark:bg-primary-light/10 dark:text-primary-light flex items-center justify-center font-bold text-sm">ত</div>
+                    <div class="testimonial-name font-semibold text-neutral-dark dark:text-white text-sm">তানভীর রহমান, ঢাকা</div>
                 </div>
             </div>
-            <div class="testimonial-card">
-                <div class="testimonial-stars">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
+            <div class="testimonial-card relative p-8 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded shadow-soft">
+                <div class="testimonial-stars text-accent-light text-xs mb-3">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                 </div>
-                <p class="testimonial-text">"করোনার পর থেকেই অনলাইন গ্রোসারি ব্যবহার করছি, তবে এদের রেট বাজারের সাধারণ খুচরা মূল্যের চেয়ে অনেক শুলভ। প্যাকজিং খুবই ভালো ছিল।"</p>
-                <div class="testimonial-user">
-                    <div class="testimonial-avatar">ন</div>
-                    <div class="testimonial-name">নুসরাত সুলতানা, উত্তরা</div>
+                <p class="testimonial-text text-sm italic text-neutral-dark dark:text-neutral-muted leading-relaxed mb-6">"করোনার পর থেকেই অনলাইন গ্রোসারি ব্যবহার করছি, তবে এদের রেট বাজারের সাধারণ খুচরা মূল্যের চেয়ে অনেক শুলভ। প্যাকজিং খুবই ভালো ছিল।"</p>
+                <div class="testimonial-user flex items-center gap-3">
+                    <div class="testimonial-avatar w-10 h-10 rounded-full bg-primary/10 text-primary dark:bg-primary-light/10 dark:text-primary-light flex items-center justify-center font-bold text-sm">ন</div>
+                    <div class="testimonial-name font-semibold text-neutral-dark dark:text-white text-sm">নুসরাত সুলতানা, উত্তরা</div>
                 </div>
             </div>
-            <div class="testimonial-card">
-                <div class="testimonial-stars">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
+            <div class="testimonial-card relative p-8 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded shadow-soft">
+                <div class="testimonial-stars text-accent-light text-xs mb-3">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
                 </div>
-                <p class="testimonial-text">"বিকাশ দিয়ে পে করার সাথে সাথে কনফার্মেশন মেসেজ পাই এবং ৪ ঘণ্টার মধ্যে ডেলিভারি সম্পন্ন হয়। আইটেম মিসিং ছিল না।"</p>
-                <div class="testimonial-user">
-                    <div class="testimonial-avatar">ম</div>
-                    <div class="testimonial-name">মাহমুদ হাসান, ধানমন্ডি</div>
+                <p class="testimonial-text text-sm italic text-neutral-dark dark:text-neutral-muted leading-relaxed mb-6">"বিকাশ দিয়ে পে করার সাথে সাথে কনফার্মেশন মেসেজ পাই এবং ৪ ঘণ্টার মধ্যে ডেলিভারি সম্পন্ন হয়। আইটেম মিসিং ছিল না।"</p>
+                <div class="testimonial-user flex items-center gap-3">
+                    <div class="testimonial-avatar w-10 h-10 rounded-full bg-primary/10 text-primary dark:bg-primary-light/10 dark:text-primary-light flex items-center justify-center font-bold text-sm">ম</div>
+                    <div class="testimonial-name font-semibold text-neutral-dark dark:text-white text-sm">মাহমুদ হাসান, ধানমন্ডি</div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- 8. MOBILE APP PROMOTION SECTION -->
-    <section class="container section-padding">
-        <div class="app-promotion-box">
-            <div class="app-promo-content">
-                <h2 class="app-promo-title"><?php echo esc_html( $app_title ); ?></h2>
-                <p class="app-promo-desc"><?php echo esc_html( $app_desc ); ?></p>
-                <div class="app-buttons">
-                    <a href="<?php echo esc_url( $playstore ); ?>" target="_blank" class="app-btn">
-                        <i class="fa-brands fa-google-play"></i>
-                        <div>
-                            <small style="display:block; font-size:10px; opacity:0.8;">GET IT ON</small>
+    <section class="container mb-12">
+        <div class="app-promotion-box p-8 md:p-12 bg-gradient-to-r from-[#1E3A1E] to-primary dark:from-neutral-900 dark:to-neutral-800 border dark:border-neutral-800 rounded-lg flex justify-between items-center flex-wrap gap-10 shadow-soft transition-smooth">
+            <div class="app-promo-content flex-1 min-w-[300px]">
+                <h2 class="app-promo-title text-accent-light dark:text-primary-light font-bold text-3xl mb-4"><?php echo esc_html( $app_title ); ?></h2>
+                <p class="app-promo-desc text-white/90 dark:text-neutral-muted text-sm md:text-base leading-relaxed mb-6 max-w-[500px]"><?php echo esc_html( $app_desc ); ?></p>
+                <div class="app-buttons flex flex-wrap gap-4">
+                    <a href="<?php echo esc_url( $playstore ); ?>" target="_blank" class="app-btn bg-black text-white hover:text-accent-light dark:hover:text-primary-light py-2.5 px-5 rounded border border-solid border-[#333] inline-flex items-center gap-3 text-xs md:text-sm font-semibold shadow transition-smooth">
+                        <i class="fa-brands fa-google-play text-xl"></i>
+                        <div class="text-left">
+                            <small class="block text-[8px] opacity-70 uppercase leading-none mb-0.5">GET IT ON</small>
                             Google Play
                         </div>
                     </a>
-                    <a href="<?php echo esc_url( $appstore ); ?>" target="_blank" class="app-btn">
-                        <i class="fa-brands fa-apple"></i>
-                        <div>
-                            <small style="display:block; font-size:10px; opacity:0.8;">Download on the</small>
+                    <a href="<?php echo esc_url( $appstore ); ?>" target="_blank" class="app-btn bg-black text-white hover:text-accent-light dark:hover:text-primary-light py-2.5 px-5 rounded border border-solid border-[#333] inline-flex items-center gap-3 text-xs md:text-sm font-semibold shadow transition-smooth">
+                        <i class="fa-brands fa-apple text-xl"></i>
+                        <div class="text-left">
+                            <small class="block text-[8px] opacity-70 uppercase leading-none mb-0.5">Download on the</small>
                             App Store
                         </div>
                     </a>
                 </div>
             </div>
-            <div class="app-promo-image">
-                <!-- Displays mockup image inside slider yellow banners or fallback graphic icon -->
-                <i class="fa-solid fa-mobile-screen-button" style="font-size: 180px; color:var(--accent-light); opacity:0.85;"></i>
+            <div class="app-promo-image flex-1 min-w-[280px] flex justify-center">
+                <i class="fa-solid fa-mobile-screen-button text-[180px] text-accent-light/10 dark:text-primary-light/10 animate-bounce transition-smooth"></i>
             </div>
         </div>
     </section>
 
-</main><!-- #main -->
+</main>
 
 <?php
 get_footer();
