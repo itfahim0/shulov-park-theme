@@ -3,8 +3,12 @@
 [![WordPress](https://img.shields.io/badge/WordPress-21759B?style=for-the-badge&logo=wordpress&logoColor=white)](https://wordpress.org)
 [![WooCommerce](https://img.shields.io/badge/WooCommerce-96588A?style=for-the-badge&logo=woocommerce&logoColor=white)](https://woocommerce.com)
 [![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 
-A high-performance, responsive WooCommerce theme designed specifically for **Shulov Park (শুলভ পার্ক)**, a modern online grocery store & daily essentials shop in Bangladesh. Engineered to deliver premium aesthetic quality on par with Chaldal, Meena Click, and Daraz Grocery, this theme incorporates dynamic customizers, seamless Swiper JS animations, localized payment graphics, and micro-interactions.
+A high-performance, responsive WooCommerce theme designed specifically for **Shulov Park (শুলভ পার্ক)**, a modern online grocery store & daily essentials shop in Bangladesh. Engineered to deliver premium aesthetic quality on par with Chaldal, Meena Click, and Daraz Grocery.
+
+This theme has been fully modernized and upgraded into a production-ready storefront powered by **Vite**, **Tailwind CSS**, and modern asynchronous eCommerce interfaces (AJAX mini-cart, quick-view, and custom cookie-based wishlist integrations).
 
 ---
 
@@ -16,87 +20,83 @@ The theme features a luxurious, professional green and gold branding design tail
 - **Luxurious Golden (`#D4AF37`):** Adds a premium shopping aesthetic (used in tags, offer countdowns, and prices).
 - **Harmonized Light Gold (`#F4D03F`):** Used in overlays, accent text, and custom badges.
 - **Harmonized White (`#FFFFFF`):** High-contrast background plates for clean grids.
+- **Glassmorphic Dark Mode:** High-end dark theme mapping seamlessly with the `dark:` Tailwind class with local persistent cookies.
 
 ---
 
-## 📁 Complete Code Structure
+## 📁 Modern Code & Assets Directory
 
 Below is the directory tree and description of the complete production-ready theme:
 
 ```text
 shulov-park/
-├── style.css                       # Core design system, variables, responsive typography, and WooCommerce overrides
-├── functions.php                   # Theme setup enqueues (Fonts, Swiper, FontAwesome), wrapper hooks, and AJAX fragments
-├── header.php                      # Sticky search-centered header, wishlist indicators, and dynamic mini-cart counters
-├── footer.php                      # Columned widgets, store hours, newsletter forms, and localized trust payment gateway ribbons
-├── front-page.php                  # Interactive storefront homepage grid with premium Swiper slides and custom loops
-├── woocommerce.php                 # Unified container wrapper for WooCommerce single views, carts, checkouts, and archives
-├── installation_instructions.md       # Extensive setup guide for administrators and customers
-├── README.md                       # Comprehensive repository documentation
+├── package.json                    # Dev dependencies (Vite, Tailwind, PostCSS, Autoprefixer) and script commands
+├── vite.config.js                  # Vite configuration enqueuing entrypoints, CORS headers, and manifest files
+├── postcss.config.js               # PostCSS plugin settings for Tailwind compilation
+├── tailwind.config.js              # Tailwind custom colors, dark selectors, and layout overrides
+├── style.css                       # Standard WordPress theme metadata definitions card (CSS rules migrated to main.css)
+├── functions.php                   # Theme setups, performance tuning (script deferring, preconnects, blocks dequeuing)
+├── header.php                      # FOUC-prevention Dark Mode class, sticky navigation, and drawer triggers
+├── footer.php                      # Dynamic widget sections, checkout paths, and Quick View modal slots
+├── front-page.php                  # Homepage grids utilizing highly optimized custom WP_Query loops
+├── woocommerce.php                 # Unified container wrapper for WooCommerce page architectures
 ├── inc/
-│   └── customizer.php              # Multi-section customizer options panel (contacts, social, deadlines, store hours)
-└── assets/
-    ├── demo-products-import.xml    # Standard WXR import file populated with 5 default grocery items in BDT currency
-    ├── js/
-    │   └── theme.js                # Core JS logic: sticky scroll, mobile drawer toggle, real-time countdown, and AJAX form feedback
-    └── images/
-        ├── logo.png                # Transparent brand identity logotype (শুলভ পার্ক)
-        ├── hero-slide-1.jpg        # Premium supermarket basket banner (আপনার প্রতিদিনের বিশ্বস্ত সঙ্গী)
-        ├── hero-slide-2.png        # Fresh vegetables bag banner (তাজা পণ্য, সুস্থ জীবন)
-        ├── hero-slide-3.png        # Yellow app promo banner (ঘরে বসেই কেনাকাটা করুন)
-        └── hero-slide-4.png        # Dark green premium basket banner (প্রতিদিনের কেনাকাটা হোক সহজ, সাশ্রয়ী ও নিশ্চিন্ত)
+│   ├── customizer.php              # Multi-section customizer options panel (contacts, socials, operating hours)
+│   ├── vite-assets.php             # Dynamic Vite dev server client enqueuer and manifest production loader
+│   ├── acf-settings.php            # Programmatic ACF groups and native WordPress Admin Settings API Panel
+│   └── ajax-actions.php            # Secure nonce-verified endpoints for Cart updates, Wishlist, and Quick Views
+├── template-parts/
+│   ├── common/
+│   │   ├── mini-cart-drawer.php    # Slide-out AJAX cart drawer displaying item lists, quantity triggers, and subtotals
+│   │   └── schema.php              # Injects rich JSON-LD SEO structured data for products, website, and organizations
+│   └── product/
+│       ├── product-card.php        # Reusable product grid card (ACF custom badges, quick view hooks, wishlist)
+│       └── quick-view-modal.php    # Detailed specifications drawer handling variable attribute selectors
+├── assets/
+│   ├── demo-products-import.xml    # Standard product importing WXR XML data
+│   ├── images/                     # Graphic banner resources and brand assets
+│   ├── src/                        # MODERN FRONTEND ENTRYPOINTS
+│   │   ├── css/
+│   │   │   └── main.css            # Standard base sheet enjecting Tailwind directives and all custom style overrides
+│   │   └── js/
+│   │       └── main.js             # Main Javascript entrypoint handling drawers, modals, countdowns, and dark mode cookies
+│   └── dist/                       # PRODUCTION COMPILED ASSETS (Hashed and cached-busted by Vite)
+│       ├── .vite/
+│       │   └── manifest.json       # Asset map read by inc/vite-assets.php to load hashed bundles
+│       ├── css/                    # Autoprefixed, minified utility stylesheet
+│       └── js/                     # Modular compiled storefront javascript
 ```
 
 ---
 
-## 💻 File Descriptions & Capabilities
+## ⚙️ Operating Instructions & Commands
 
-### 1. Typography & Styling (`style.css`)
-Implements HSL typography and spacing layouts. Houses responsive grids (`1200px` to mobile stacking), smooth zoom scale overlays, dynamic buttons with interactive transition scales, and detailed styles for all standard WooCommerce checkout fields and cart tables.
+### Local Development Environment
+Start by installing your packages and spinning up Vite's HMR server:
 
-### 2. Core Architecture (`functions.php`)
-- Enqueues **Hind Siliguri** (Bangla) and **Poppins** (English) Google Fonts alongside Swiper and FontAwesome libraries.
-- Implements `woocommerce_add_to_cart_fragments` to automatically update the header's cart count badge via AJAX when products are added to the basket without requiring a page refresh.
-- Integrates `shulov_park_get_wishlist_count()` to dynamically display YITH Wishlist product counts.
-- Sets BDT (`৳`) as the standard WooCommerce currency symbol.
+1.  **Install all dependencies**:
+    ```bash
+    npm install
+    ```
+2.  **Start Vite HMR server**:
+    ```bash
+    npm run dev
+    ```
+    *Vite will boot a local development engine at `http://localhost:5173`. WordPress automatically detects this active server, enqueues Vite's dev client, and starts hot-reloading. Any edits you make to css/main.css or js/main.js reflect instantly on the browser without page refreshes!*
 
-### 3. Header & Navigation (`header.php`)
-Constructs the sticky header with central product search inputs, desktop/mobile responsive nav menus, account dashboard links, and the wishlists/carts items indicators.
+### Production Compilation
+When preparing to deploy your theme to production:
 
-### 4. Interactive Frontpage (`front-page.php`)
-Combines:
-- **Hero Slider:** Full-width Swiper carousel utilizing the four high-resolution graphic banners, configured with hidden screen-reader semantic headings for optimal SEO indexing.
-- **Featured Categories:** Eight grid boxes (Grocery, Veggies, Fruits, Dairy, Drinks, Snacks, Cosmetics, Household) styled with rounded curves and hover states.
-- **Flash Sale Countdown:** Real-time javascript countdown timer pulling dates dynamically from the admin panel, followed by active sale grids.
-- **Why Choose Us:** Five beautiful graphic cards explaining shopping perks.
-- **Testimonials & App Promos:** Localized buyer reviews and mobile store download rows.
-
-### 5. Options Panel (`inc/customizer.php`)
-Registers customized controls under **Appearance > Customize > Shulov Park Options**:
-- **Contacts & Socials:** Phone, Email, Store Address, Facebook page, Instagram profile, and YouTube channel.
-- **Flash Sale Deadline:** Set specific deadlines (`YYYY-MM-DDTHH:MM:SS` format) and title headers.
-- **Mobile Downloads:** Google Play Store and Apple App Store links.
-- **Operating Hours:** Weekly store hours and delivery descriptions.
-
-### 6. JavaScript Functions (`assets/js/theme.js`)
-Handles the sticky scroll class additions, toggles the mobile drawer and burger icons, implements the real-time Flash Sale ticking countdown down to the second, and handles dynamic submit states inside the newsletter.
+1.  **Generate production bundle**:
+    ```bash
+    npm run build
+    ```
+    *Vite empty-cleans the `assets/dist/` directory, bundles and tree-shakes assets into hashed production files, and writes the `manifest.json` file. WordPress will read this manifest and serve the production bundles automatically.*
 
 ---
 
-## ⚙️ Installation & Quick Setup
-
-For complete, detailed configurations, consult [installation_instructions.md](file:///d:/Ecomerce/Shulove%20park/wp-content/themes/shulov-park/installation_instructions.md).
-
-1. Ensure **WooCommerce** and **YITH WooCommerce Wishlist** are active on your WordPress installation.
-2. Activate the **Shulov Park** theme in **Appearance > Themes**.
-3. Create a static page titled **Home** and set it as your static Homepage in **Settings > Reading**.
-4. Configure your navigation menus in **Appearance > Menus** and check the box for **Primary Menu**.
-5. Import standard products, BDT prices, categories, and tags using the WXR XML file:
-   Go to **Tools > Import > WordPress** and upload `wp-content/themes/shulov-park/assets/demo-products-import.xml`.
-6. Customize deadlines, hours, and app stores in **Appearance > Customize > Shulov Park Options**.
-
----
-
-## 👨‍💻 Developer & License
-- Maintained & Developed by **[@itfahim0](https://github.com/itfahim0)**.
-- Licensed under the **GNU General Public License v2 or later**.
+## 👨‍💻 Developer & Repository Info
+- **GitHub Repository**: [https://github.com/itfahim0/shulov-park-theme](https://github.com/itfahim0/shulov-park-theme)
+- **Git Clone URL**: `https://github.com/itfahim0/shulov-park-theme.git`
+- **Maintained & Developed by**: **[@itfahim0](https://github.com/itfahim0)**
+- **License**: Licensed under the **GNU General Public License v2 or later**.
