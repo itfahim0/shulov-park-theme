@@ -11,9 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Retrieve customizer/admin settings parameters with elegant fallbacks
-$phone     = shulov_get_setting( 'shulov_park_phone', '+880 1234 567 890' );
+$phone     = shulov_get_setting( 'shulov_park_phone', '+880 1568 391 515' );
 $email     = shulov_get_setting( 'shulov_park_email', 'support@shulovpark.com' );
-$address   = shulov_get_setting( 'shulov_park_address', 'Shulov Park, Dhaka, Bangladesh' );
+$address   = shulov_get_setting( 'shulov_park_address', 'Savar model College road, Dhaka 1340' );
 $facebook  = shulov_get_setting( 'shulov_park_facebook', '#' );
 $instagram = shulov_get_setting( 'shulov_park_instagram', '#' );
 $youtube   = shulov_get_setting( 'shulov_park_youtube', '#' );
