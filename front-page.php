@@ -215,8 +215,8 @@ $shop_url = class_exists( 'WooCommerce' ) ? esc_url( wc_get_page_permalink( 'sho
             $brands = array('Radhuni', 'Pran', 'Teer', 'Aarong', 'Fresh', 'Pushti');
             foreach ( $brands as $brand ) :
                 ?>
-                <div class="brand-card flex-1 min-w-[140px] p-5 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded-md shadow-soft flex items-center justify-center hover:scale-105 hover:border-accent transition-smooth">
-                    <span class="font-bold text-neutral-muted dark:text-neutral-500 text-lg tracking-wider"><?php echo esc_html($brand); ?></span>
+                <div class="brand-card flex-1 min-w-[140px] p-5 bg-white dark:bg-neutral-900 border border-neutral-border dark:border-neutral-800 rounded-md shadow-soft flex items-center justify-center transition-smooth">
+                    <span class="brand-name font-bold text-lg tracking-wider"><?php echo esc_html($brand); ?></span>
                 </div>
             <?php endforeach; ?>
         </div>

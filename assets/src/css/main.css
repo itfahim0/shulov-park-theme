@@ -142,7 +142,7 @@ img {
 
 .btn-primary {
     background: var(--primary);
-    color: var(--white) !important;
+    color: #ffffff !important;
     box-shadow: 0 4px 15px rgba(15, 107, 53, 0.2);
 }
 
@@ -154,7 +154,7 @@ img {
 
 .btn-accent {
     background: var(--accent);
-    color: var(--white) !important;
+    color: #ffffff !important;
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
 }
 
@@ -332,7 +332,7 @@ img {
 
 .header-nav-bottom ul li a {
     display: block;
-    color: var(--white);
+    color: #ffffff;
     padding: 14px 0;
     font-size: 15px;
     font-weight: 600;
@@ -748,11 +748,28 @@ img {
     align-items: center;
     justify-content: center;
     transition: var(--transition-smooth);
+    color: var(--text-dark);
+}
+
+.brand-card .brand-name {
+    transition: var(--transition-smooth);
 }
 
 .brand-card:hover {
-    transform: scale(1.05);
-    border-color: var(--accent);
+    transform: translateY(-4px) scale(1.05);
+    background: var(--primary);
+    border-color: var(--primary);
+    box-shadow: 0 10px 25px rgba(15, 107, 53, 0.25);
+}
+
+.brand-card:hover .brand-name {
+    color: #ffffff !important;
+}
+
+.dark .brand-card:hover {
+    background: var(--primary-light);
+    border-color: var(--primary-light);
+    box-shadow: 0 10px 25px rgba(46, 139, 87, 0.4);
 }
 
 .brand-card img {

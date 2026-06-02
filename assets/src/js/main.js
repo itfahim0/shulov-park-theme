@@ -539,4 +539,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // ==========================================
+    // 10. AUTOMATIC CHECKOUT REFRESH ON DISTRICT CHANGE
+    // ==========================================
+    jQuery(document.body).on('change', 'select.state_select, #billing_state, #shipping_state', function() {
+        jQuery(document.body).trigger('update_checkout');
+    });
 });

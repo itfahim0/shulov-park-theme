@@ -238,3 +238,56 @@ function shulov_park_defer_scripts( $tag, $handle, $src ) {
     return $tag;
 }
 add_filter( 'script_loader_tag', 'shulov_park_defer_scripts', 10, 3 );
+
+/**
+ * 9. DYNAMIC SHIPPING RATES BASED ON DISTRICT (Inside/Outside Dhaka)
+ * Checks the selected state/district on checkout and dynamically applies Inside/Outside Dhaka rates.
+ */
+function shulov_park_dynamic_district_shipping( $rates, $package ) {
+    $state = isset( $package['destination']['state'] ) ? $package['destination']['state'] : '';
+    
+    // Dhaka codes in WooCommerce core: 'BD-13' (Dhaka District) or if it's explicitly 'Dhaka'
+    $is_dhaka = ( $state === 'BD-13' || strcasecmp( $state, 'Dhaka' ) === 0 || $state === 'BD-05' );
+    
+    $found_custom_rate = false;
+    foreach ( $rates as $rate_id => $rate ) {
+        $label = strtolower( $rate->get_label() );
+        
+        if ( strpos( $label, 'inside' ) !== false || strpos( $label, 'ঢাকা' ) !== false ) {
+            if ( ! $is_dhaka ) {
+                unset( $rates[ $rate_id ] );
+            } else {
+                $found_custom_rate = true;
+            }
+        } elseif ( strpos( $label, 'outside' ) !== false || strpos( $label, 'ঢাকার বাইরে' ) !== false ) {
+            if ( $is_dhaka ) {
+                unset( $rates[ $rate_id ] );
+            } else {
+                $found_custom_rate = true;
+            }
+        }
+    }
+    
+    // Fallback: If no shipping rates are configured in the admin dashboard,
+    // we programmatically add a shipping method to avoid "No shipping options available" error!
+    if ( empty( $rates ) || ! $found_custom_rate ) {
+        $rates = array();
+        
+        $shipping_label = $is_dhaka ? __( 'Inside Dhaka (ঢাকার ভেতরে)', 'shulov-park' ) : __( 'Outside Dhaka (ঢাকার বাইরে)', 'shulov-park' );
+        $shipping_cost  = $is_dhaka ? 60 : 120;
+        
+        $rate_id = 'dynamic_flat_rate';
+        $custom_rate = new WC_Shipping_Rate(
+            $rate_id,
+            $shipping_label,
+            $shipping_cost,
+            array(),
+            'flat_rate'
+        );
+        
+        $rates[ $rate_id ] = $custom_rate;
+    }
+    
+    return $rates;
+}
+add_filter( 'woocommerce_package_rates', 'shulov_park_dynamic_district_shipping', 10, 2 );
