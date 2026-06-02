@@ -132,7 +132,7 @@ $delivery_time  = shulov_get_setting( 'shulov_park_delivery_time', '২৪/৭ �
         <div class="container">
             <div class="footer-bottom-content flex justify-between items-center flex-wrap gap-4 text-xs md:text-sm text-neutral-muted">
                 <p>&copy; <?php echo date('Y'); ?> <strong class="text-[#94A3B8]"><?php bloginfo( 'name' ); ?></strong>. সর্বস্বত্ব সংরক্ষিত।</p>
-                <p>কারিগরি সহায়তায়: <a href="https://github.com/itfahim0" target="_blank" class="text-accent hover:text-accent-light font-semibold">@itfahim0</a></p>
+                <p>কারিগরি সহায়তায়: <a href="https://www.facebook.com/itfaahim" target="_blank" class="text-accent hover:text-accent-light font-semibold">Fahim Muntasir</a></p>
             </div>
         </div>
     </div>
