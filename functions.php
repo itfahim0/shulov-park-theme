@@ -291,3 +291,26 @@ function shulov_park_dynamic_district_shipping( $rates, $package ) {
     return $rates;
 }
 add_filter( 'woocommerce_package_rates', 'shulov_park_dynamic_district_shipping', 10, 2 );
+
+/**
+ * 10. BUY NOW REDIRECT AND BUTTON HOOKS
+ */
+add_filter( 'woocommerce_add_to_cart_redirect', 'shulov_park_buy_now_redirect_handler' );
+function shulov_park_buy_now_redirect_handler( $url ) {
+    if ( isset( $_REQUEST['buy_now'] ) || isset( $_POST['buy_now'] ) ) {
+        return wc_get_checkout_url();
+    }
+    return $url;
+}
+
+add_action( 'woocommerce_after_add_to_cart_button', 'shulov_park_add_buy_now_button_single', 10 );
+function shulov_park_add_buy_now_button_single() {
+    global $product;
+    if ( ! $product || ! $product->is_purchasable() || ! $product->is_in_stock() ) {
+        return;
+    }
+    echo '<button type="submit" name="buy_now" value="1" class="button buy-now-button bg-accent hover:bg-accent-hover text-white font-bold py-3 px-6 rounded transition-smooth border-none cursor-pointer flex items-center justify-center gap-2">';
+    echo '<i class="fa-solid fa-bolt"></i> ' . esc_html__( 'এখনই কিনুন', 'shulov-park' );
+    echo '</button>';
+}
+

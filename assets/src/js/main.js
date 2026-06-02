@@ -541,6 +541,101 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ==========================================
+    // 9.5. ORDER TRACKING MODAL ENGINE
+    // ==========================================
+    const orderTrackModal = document.getElementById('order-track-modal');
+    const orderTrackOverlay = document.getElementById('order-track-overlay');
+    const closeOrderTrack = document.getElementById('close-order-track');
+    const orderTrackTriggers = document.querySelectorAll('.order-track-trigger');
+    const orderTrackForm = document.getElementById('order-track-form');
+    const orderTrackResult = document.getElementById('order-track-result');
+
+    const openTrackModal = function(e) {
+        if (e) e.preventDefault();
+        if (orderTrackModal) {
+            orderTrackModal.classList.remove('pointer-events-none');
+            orderTrackModal.classList.add('opacity-100');
+            const box = orderTrackModal.querySelector('.modal-scale');
+            if (box) {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            }
+        }
+    };
+
+    const hideTrackModal = function() {
+        if (orderTrackModal) {
+            orderTrackModal.classList.add('pointer-events-none');
+            orderTrackModal.classList.remove('opacity-100');
+            const box = orderTrackModal.querySelector('.modal-scale');
+            if (box) {
+                box.classList.add('scale-95', 'opacity-0');
+                box.classList.remove('scale-100', 'opacity-100');
+            }
+        }
+    };
+
+    orderTrackTriggers.forEach(trigger => {
+        trigger.addEventListener('click', openTrackModal);
+    });
+
+    if (closeOrderTrack) {
+        closeOrderTrack.addEventListener('click', hideTrackModal);
+    }
+    if (orderTrackOverlay) {
+        orderTrackOverlay.addEventListener('click', hideTrackModal);
+    }
+
+    if (orderTrackForm) {
+        orderTrackForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const queryInput = document.getElementById('order-track-query');
+            if (!queryInput) return;
+
+            const queryVal = queryInput.value.trim();
+            if (!queryVal) return;
+
+            const submitBtn = orderTrackForm.querySelector('button[type="submit"]');
+            const origBtnHtml = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> খোঁজা হচ্ছে...';
+
+            if (orderTrackResult) {
+                orderTrackResult.classList.remove('hidden');
+                orderTrackResult.innerHTML = '<div class="text-center py-6 text-neutral-muted"><i class="fa-solid fa-circle-notch animate-spin text-2xl text-primary mb-2"></i><p class="text-xs">অর্ডার বিবরণী লোড হচ্ছে...</p></div>';
+            }
+
+            jQuery.ajax({
+                url: ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'shulov_park_order_track',
+                    query: queryVal,
+                    nonce: securityNonce
+                },
+                success: function(response) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = origBtnHtml;
+                    if (orderTrackResult) {
+                        if (response.success) {
+                            orderTrackResult.innerHTML = response.data.html;
+                        } else {
+                            orderTrackResult.innerHTML = `<div class="p-4 bg-red-50 border border-solid border-red-200 text-red-700 text-xs rounded dark:bg-red-950/20 dark:border-red-900/30 dark:text-red-400 text-center"><i class="fa-solid fa-circle-xmark mr-1.5 text-sm"></i>${response.data.message}</div>`;
+                        }
+                    }
+                },
+                error: function() {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = origBtnHtml;
+                    if (orderTrackResult) {
+                        orderTrackResult.innerHTML = '<div class="p-4 bg-red-50 border border-solid border-red-200 text-red-700 text-xs rounded dark:bg-red-950/20 dark:border-red-900/30 dark:text-red-400 text-center"><i class="fa-solid fa-triangle-exclamation mr-1.5 text-sm"></i>সার্ভারে যোগাযোগ করতে ব্যর্থ হয়েছে। আবার চেষ্টা করুন।</div>';
+                    }
+                }
+            });
+        });
+    }
+
+    // ==========================================
     // 10. AUTOMATIC CHECKOUT REFRESH ON DISTRICT CHANGE
     // ==========================================
     jQuery(document.body).on('change', 'select.state_select, #billing_state, #shipping_state', function() {

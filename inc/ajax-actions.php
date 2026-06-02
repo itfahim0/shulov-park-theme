@@ -194,3 +194,151 @@ function shulov_park_is_product_in_wishlist( $product_id ) {
     }
     return false;
 }
+
+/**
+ * 6. CUSTOM ORDER TRACKING AJAX CALLBACK
+ * Securely retrieves details of orders matching Order ID or Mobile Number for logged-in users.
+ */
+function shulov_park_order_track_callback() {
+    // Nonce verification
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'shulov_park_secure_action_nonce' ) ) {
+        wp_send_json_error( array( 'message' => __( 'সিকিউরিটি ভেরিফিকেশন ব্যর্থ হয়েছে। অনুগ্রহ করে পেজটি রিফ্রেশ করুন।', 'shulov-park' ) ) );
+    }
+
+    // Require authentication
+    if ( ! is_user_logged_in() ) {
+        wp_send_json_error( array( 'message' => __( 'আপনার অর্ডার ট্র্যাক করতে অনুগ্রহ করে প্রথমে লগইন করুন।', 'shulov-park' ) ) );
+    }
+
+    $query = isset( $_POST['query'] ) ? sanitize_text_field( $_POST['query'] ) : '';
+    if ( empty( $query ) ) {
+        wp_send_json_error( array( 'message' => __( 'অনুগ্রহ করে একটি সঠিক অর্ডার আইডি অথবা মোবাইল নম্বর প্রদান করুন।', 'shulov-park' ) ) );
+    }
+
+    $current_user_id = get_current_user_id();
+    
+    // Find matching orders
+    $matching_orders = array();
+
+    // Check if query could be a direct Order ID
+    if ( is_numeric( $query ) ) {
+        $order_id = absint( $query );
+        $order = wc_get_order( $order_id );
+        if ( $order && $order->get_customer_id() === $current_user_id ) {
+            $matching_orders[] = $order;
+        }
+    }
+
+    // If no order found directly, search user's orders by phone or ID
+    if ( empty( $matching_orders ) ) {
+        $user_orders = wc_get_orders( array(
+            'customer' => $current_user_id,
+            'limit'    => -1,
+        ) );
+
+        // Helper to normalize phone numbers (compare last 10 digits)
+        $normalize_phone = function( $phone ) {
+            $digits = preg_replace( '/\D/', '', $phone );
+            return strlen( $digits ) >= 10 ? substr( $digits, -10 ) : $digits;
+        };
+
+        $normalized_query_phone = $normalize_phone( $query );
+
+        foreach ( $user_orders as $order ) {
+            $order_id_str = (string) $order->get_id();
+            $billing_phone = $normalize_phone( $order->get_billing_phone() );
+            $shipping_phone = $normalize_phone( $order->get_shipping_phone() );
+
+            if ( $order_id_str === $query || 
+                 ( ! empty( $normalized_query_phone ) && ( $billing_phone === $normalized_query_phone || $shipping_phone === $normalized_query_phone ) ) ) {
+                $matching_orders[] = $order;
+            }
+        }
+    }
+
+    if ( empty( $matching_orders ) ) {
+        wp_send_json_error( array( 'message' => __( 'দুঃখিত, এই আইডি বা মোবাইল নম্বর দিয়ে কোনো অর্ডার পাওয়া যায়নি অথবা অর্ডারটি আপনার অ্যাকাউন্টের সাথে যুক্ত নয়।', 'shulov-park' ) ) );
+    }
+
+    // Map order statuses to Bangla translations
+    $status_translations = array(
+        'pending'    => 'পেমেন্টের জন্য অপেক্ষমাণ (Pending payment)',
+        'processing' => 'প্রক্রিয়াধীন (Processing)',
+        'on-hold'    => 'হোল্ডে রাখা হয়েছে (On hold)',
+        'completed'  => 'সম্পন্ন হয়েছে (Completed)',
+        'cancelled'  => 'বাতিল করা হয়েছে (Cancelled)',
+        'refunded'   => 'রিফান্ড করা হয়েছে (Refunded)',
+        'failed'     => 'ব্যর্থ হয়েছে (Failed)',
+        'checkout-draft' => 'ড্রাফট (Draft)',
+    );
+
+    ob_start();
+    ?>
+    <div class="space-y-6">
+        <?php foreach ( $matching_orders as $order ) : 
+            $status = $order->get_status();
+            $status_lbl = isset( $status_translations[ $status ] ) ? $status_translations[ $status ] : $status;
+            
+            // Setup status badge styling class
+            $badge_class = 'bg-neutral-light text-neutral-dark dark:bg-neutral-800 dark:text-neutral-350';
+            if ( $status === 'completed' ) {
+                $badge_class = 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
+            } elseif ( in_array( $status, array( 'processing', 'on-hold' ) ) ) {
+                $badge_class = 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
+            } elseif ( $status === 'pending' ) {
+                $badge_class = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300';
+            } elseif ( in_array( $status, array( 'cancelled', 'failed' ) ) ) {
+                $badge_class = 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
+            }
+            ?>
+            <div class="p-4 border border-solid border-neutral-border dark:border-neutral-800 rounded bg-neutral-light/30 dark:bg-neutral-900/50">
+                <div class="flex justify-between items-center flex-wrap gap-2 border-b border-solid border-neutral-border dark:border-neutral-800 pb-3 mb-3">
+                    <div>
+                        <h4 class="text-sm md:text-base font-bold text-neutral-dark dark:text-white">
+                            <?php printf( esc_html__( 'অর্ডার আইডি: #%s', 'shulov-park' ), esc_html( $order->get_id() ) ); ?>
+                        </h4>
+                        <span class="text-xs text-neutral-muted">
+                            <?php echo esc_html( $order->get_date_created()->date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) ); ?>
+                        </span>
+                    </div>
+                    <span class="text-xs px-2.5 py-1 rounded font-semibold <?php echo esc_attr( $badge_class ); ?>">
+                        <?php echo esc_html( $status_lbl ); ?>
+                    </span>
+                </div>
+
+                <!-- Products Purchased -->
+                <div class="mb-4">
+                    <h5 class="text-xs font-bold text-neutral-dark dark:text-white mb-2"><?php esc_html_e( 'ক্রয়কৃত পণ্যসমূহ:', 'shulov-park' ); ?></h5>
+                    <ul class="space-y-1 pl-4 list-disc text-xs text-neutral-muted">
+                        <?php foreach ( $order->get_items() as $item_id => $item ) : ?>
+                            <li>
+                                <strong class="text-neutral-dark dark:text-white"><?php echo esc_html( $item->get_name() ); ?></strong> 
+                                x <?php echo esc_html( $item->get_quantity() ); ?> 
+                                (<strong class="text-primary dark:text-primary-light"><?php echo wp_kses_post( $order->get_formatted_line_subtotal( $item ) ); ?></strong>)
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+
+                <!-- Total and Shipping -->
+                <div class="text-xs border-t border-dashed border-neutral-border dark:border-neutral-800 pt-3 flex justify-between items-center">
+                    <div>
+                        <span class="text-neutral-muted block">পেমেন্ট মাধ্যম: <?php echo esc_html( $order->get_payment_method_title() ); ?></span>
+                        <span class="text-neutral-muted block">শিপিং ঠিকানা: <?php echo esc_html( $order->get_shipping_address_1() ); ?></span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-neutral-muted block"><?php esc_html_e( 'সর্বমোট:', 'shulov-park' ); ?></span>
+                        <strong class="text-sm md:text-base text-primary dark:text-primary-light font-bold">
+                            <?php echo wp_kses_post( $order->get_formatted_order_total() ); ?>
+                        </strong>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?php
+    $html = ob_get_clean();
+    wp_send_json_success( array( 'html' => $html ) );
+}
+add_action( 'wp_ajax_shulov_park_order_track', 'shulov_park_order_track_callback' );
+

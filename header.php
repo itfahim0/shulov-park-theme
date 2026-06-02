@@ -83,6 +83,12 @@ $is_dark = isset( $_COOKIE['theme_dark'] ) && $_COOKIE['theme_dark'] === 'yes';
                     </a>
                 <?php endif; ?>
 
+                <!-- Order Track Link -->
+                <a href="#" class="header-icon order-track-trigger text-neutral-dark dark:text-white hover:text-primary flex flex-col items-center relative text-[11px]" title="<?php esc_attr_e('অর্ডার ট্র্যাক','shulov-park'); ?>">
+                    <i class="fa-solid fa-truck-fast text-xl text-primary dark:text-primary-light mb-0.5"></i>
+                    <span>অর্ডার ট্র্যাক</span>
+                </a>
+
                 <!-- Wishlist contents linked dynamically -->
                 <a href="#" class="header-icon wishlist-contents text-neutral-dark dark:text-white hover:text-primary flex flex-col items-center relative text-[11px]" title="<?php esc_attr_e('ইচ্ছা তালিকা','shulov-park'); ?>">
                     <i class="fa-regular fa-heart text-xl text-primary dark:text-primary-light mb-0.5"></i>

@@ -107,26 +107,48 @@ $in_wishlist = shulov_park_is_product_in_wishlist( $product_id );
                 <?php echo wp_kses_post( $price_html ); ?>
             </div>
 
-            <!-- Action buttons grid -->
-            <div class="grid grid-cols-5 gap-2">
-                <!-- AJAX Quick View Toggle Button -->
-                <button class="quick-view-trigger col-span-1 rounded bg-neutral-light dark:bg-neutral-800 hover:bg-primary dark:hover:bg-primary hover:text-white text-neutral-dark dark:text-white flex items-center justify-center transition-smooth" data-product-id="<?php echo esc_attr( $product_id ); ?>" title="<?php esc_attr_e( 'ঝটপট দেখুন', 'shulov-park' ); ?>">
-                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
-                </button>
+            <!-- Action buttons container -->
+            <div class="flex flex-col gap-2 mt-3">
+                <div class="flex gap-2">
+                    <!-- AJAX Quick View Toggle Button -->
+                    <button class="quick-view-trigger w-12 rounded bg-neutral-light dark:bg-neutral-800 hover:bg-primary dark:hover:bg-primary hover:text-white text-neutral-dark dark:text-white flex items-center justify-center transition-smooth" data-product-id="<?php echo esc_attr( $product_id ); ?>" title="<?php esc_attr_e( 'ঝটপট দেখুন', 'shulov-park' ); ?>">
+                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                    </button>
 
-                <!-- Standard WooCommerce Add to Cart button (Tailwind styled) -->
-                <div class="col-span-4 add-to-cart-container">
-                    <?php
-                    woocommerce_template_loop_add_to_cart( array(
-                        'class' => implode( ' ', array_filter( array(
-                            'button',
-                            'product_type_' . $product->get_type(),
-                            $product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '',
-                            $product->supports( 'ajax_add_to_cart' ) && $product->is_purchasable() && $product->is_in_stock() ? 'ajax_add_to_cart' : '',
-                            'w-full flex items-center justify-center gap-2 py-2 px-3 bg-primary hover:bg-primary-hover text-white text-xs md:text-sm font-semibold rounded shadow-soft hover:shadow-hover hover:scale-[1.02] transition-smooth border-none'
-                        ) ) )
-                    ) );
-                    ?>
+                    <!-- Standard WooCommerce Add to Cart button (Tailwind styled) -->
+                    <div class="flex-1 add-to-cart-container">
+                        <?php
+                        woocommerce_template_loop_add_to_cart( array(
+                            'class' => implode( ' ', array_filter( array(
+                                'button',
+                                'product_type_' . $product->get_type(),
+                                $product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '',
+                                $product->supports( 'ajax_add_to_cart' ) && $product->is_purchasable() && $product->is_in_stock() ? 'ajax_add_to_cart' : '',
+                                'w-full flex items-center justify-center gap-2 py-2 px-3 bg-primary hover:bg-primary-hover text-white text-xs md:text-sm font-semibold rounded shadow-soft hover:shadow-hover hover:scale-[1.02] transition-smooth border-none'
+                            ) ) )
+                        ) );
+                        ?>
+                    </div>
+                </div>
+                <!-- Buy Now Button -->
+                <div class="buy-now-container">
+                    <?php if ( $product->is_purchasable() && $product->is_in_stock() ) : ?>
+                        <?php if ( $product->is_type( 'variable' ) ) : ?>
+                            <a href="<?php echo esc_url( $permalink ); ?>" class="w-full flex items-center justify-center gap-2 py-2 px-3 bg-accent hover:bg-accent-hover text-white text-xs md:text-sm font-semibold rounded shadow-soft hover:shadow-hover hover:scale-[1.02] transition-smooth border-none text-center">
+                                <i class="fa-solid fa-bolt text-xs"></i>
+                                <?php esc_html_e( 'এখনই কিনুন', 'shulov-park' ); ?>
+                            </a>
+                        <?php else : ?>
+                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product_id . '&buy_now=1' ); ?>" class="w-full flex items-center justify-center gap-2 py-2 px-3 bg-accent hover:bg-accent-hover text-white text-xs md:text-sm font-semibold rounded shadow-soft hover:shadow-hover hover:scale-[1.02] transition-smooth border-none text-center buy-now-btn" data-product-id="<?php echo esc_attr( $product_id ); ?>">
+                                <i class="fa-solid fa-bolt text-xs"></i>
+                                <?php esc_html_e( 'এখনই কিনুন', 'shulov-park' ); ?>
+                            </a>
+                        <?php endif; ?>
+                    <?php else : ?>
+                        <span class="w-full flex items-center justify-center gap-2 py-2 px-3 bg-neutral-300 dark:bg-neutral-800 text-neutral-500 text-xs md:text-sm font-semibold rounded cursor-not-allowed text-center">
+                            <?php esc_html_e( 'স্টক আউট', 'shulov-park' ); ?>
+                        </span>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

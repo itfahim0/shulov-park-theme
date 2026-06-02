@@ -1410,3 +1410,73 @@ img {
     .hero-slide-content h2 { font-size: 20px; }
     .app-buttons { justify-content: center; }
 }
+
+/* ==========================================
+   ORDER TRACKING & SINGLE PRODUCT BUY NOW STYLES
+   ========================================== */
+#order-track-modal {
+    transition: opacity 0.3s ease-in-out;
+}
+#order-track-modal .modal-scale {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease-in-out;
+}
+
+/* Single Product Buy Now button styling */
+.woocommerce div.product form.cart .buy-now-button {
+    background-color: var(--accent) !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-weight: 600 !important;
+    padding: 12px 24px !important;
+    border-radius: var(--radius-sm) !important;
+    transition: var(--transition-smooth) !important;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.woocommerce div.product form.cart .buy-now-button:hover {
+    background-color: var(--accent-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+/* Single Product button layout wrapper compatibility */
+.woocommerce div.product form.cart {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+.woocommerce div.product form.cart .quantity {
+    margin-right: 0 !important;
+}
+.woocommerce div.product form.cart .single_add_to_cart_button {
+    background-color: var(--primary) !important;
+    color: #ffffff !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    transition: var(--transition-smooth) !important;
+    border: none !important;
+}
+.woocommerce div.product form.cart .single_add_to_cart_button:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+@media (max-width: 480px) {
+    .woocommerce div.product form.cart {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+    .woocommerce div.product form.cart .quantity,
+    .woocommerce div.product form.cart .single_add_to_cart_button,
+    .woocommerce div.product form.cart .buy-now-button {
+        width: 100% !important;
+        margin-left: 0 !important;
+        text-align: center;
+        justify-content: center;
+    }
+}
+
