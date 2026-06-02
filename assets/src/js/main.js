@@ -191,11 +191,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
     const newsletterForm = document.querySelector('.newsletter-form');
     if (newsletterForm) {
-        const input = newsletterForm.querySelector('input[type="email"]');
-        const button = newsletterForm.querySelector('button');
-        
-        button.addEventListener('click', function(e) {
+        newsletterForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            const input = newsletterForm.querySelector('input[type="email"]');
             if (input && input.value.trim() !== '') {
                 const originalContent = newsletterForm.innerHTML;
                 
@@ -211,15 +209,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     newsletterForm.style.background = '';
                     newsletterForm.style.border = '';
                     newsletterForm.innerHTML = originalContent;
-                    
-                    // Re-bind listeners
-                    const newInput = newsletterForm.querySelector('input[type="email"]');
-                    const newBtn = newsletterForm.querySelector('button');
-                    if (newBtn && newInput) {
-                        newBtn.addEventListener('click', arguments.callee);
-                    }
                 }, 5000);
-            } else {
+            } else if (input) {
                 input.style.borderColor = 'var(--danger)';
                 input.placeholder = 'দয়া করে একটি সঠিক ইমেইল দিন';
                 setTimeout(() => {
@@ -309,12 +300,12 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     const bindDrawerQuantityControls = () => {
+        // 1. Bind Quantity Inputs (+/- buttons)
         const qtyInputs = document.querySelectorAll('#mini-cart-drawer .drawer-qty-input');
         qtyInputs.forEach(input => {
             const key = input.getAttribute('data-cart-key');
             const minusBtn = input.parentElement.querySelector('.drawer-qty-minus');
             const plusBtn = input.parentElement.querySelector('.drawer-qty-plus');
-            const removeBtn = input.closest('.cart-drawer-item').querySelector('.drawer-item-remove');
 
             const updateQty = (newVal) => {
                 if (newVal < 1) return;
@@ -347,28 +338,36 @@ document.addEventListener('DOMContentLoaded', function() {
             if (plusBtn) {
                 plusBtn.addEventListener('click', () => updateQty(parseInt(input.value) + 1));
             }
-            if (removeBtn) {
-                removeBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    jQuery.ajax({
-                        url: ajaxUrl,
-                        type: 'POST',
-                        data: {
-                            action: 'shulov_park_cart_drawer_remove_item',
-                            cart_key: key,
-                            nonce: securityNonce
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                if (response.data.fragments) {
-                                    jQuery(document.body).trigger('removed_from_cart', [response.data.fragments, response.data.cart_hash]);
-                                }
-                                refreshCartDrawerContents();
+        });
+
+        // 2. Bind Remove Buttons independently to ensure all items can be removed
+        const removeBtns = document.querySelectorAll('#mini-cart-drawer .drawer-item-remove');
+        removeBtns.forEach(removeBtn => {
+            removeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const key = removeBtn.getAttribute('data-cart-key');
+                if (!key) return;
+
+                removeBtn.classList.add('opacity-50', 'pointer-events-none');
+
+                jQuery.ajax({
+                    url: ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'shulov_park_cart_drawer_remove_item',
+                        cart_key: key,
+                        nonce: securityNonce
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            if (response.data.fragments) {
+                                jQuery(document.body).trigger('removed_from_cart', [response.data.fragments, response.data.cart_hash]);
                             }
+                            refreshCartDrawerContents();
                         }
-                    });
+                    }
                 });
-            }
+            });
         });
     };
 

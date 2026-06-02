@@ -14,23 +14,32 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Universal setting getter helper.
  * Resolves settings from ACF (if active), native Options API, or Customizer (theme mods) with standard defaults.
  */
-function shulov_get_setting( $setting_key, $default_value = '' ) {
+function shulov_get_setting( $setting_key, $default_value = '', $post_id = null ) {
     // 1. Try to fetch from ACF first if plugin is active
     if ( function_exists( 'get_field' ) ) {
-        // ACF option pages usually save options with the 'option' identifier
-        $acf_val = get_field( $setting_key, 'option' );
+        // If a post_id is provided, check if it's numeric/post context or option context
+        $acf_context = ! empty( $post_id ) ? $post_id : 'option';
+        $acf_val = get_field( $setting_key, $acf_context );
         if ( ! empty( $acf_val ) ) {
             return $acf_val;
         }
     }
 
-    // 2. Try fetching from the native Options API (saved by our Admin Settings Panel)
+    // 2. Try fetching from post meta if $post_id is provided
+    if ( ! empty( $post_id ) ) {
+        $meta_val = get_post_meta( $post_id, $setting_key, true );
+        if ( $meta_val !== false && $meta_val !== '' ) {
+            return $meta_val;
+        }
+    }
+
+    // 3. Try fetching from the native Options API (saved by our Admin Settings Panel)
     $opt_val = get_option( $setting_key );
     if ( $opt_val !== false && $opt_val !== '' ) {
         return $opt_val;
     }
 
-    // 3. Fallback to standard Customizer Theme Mod (used by original code)
+    // 4. Fallback to standard Customizer Theme Mod (used by original code)
     return get_theme_mod( $setting_key, $default_value );
 }
 

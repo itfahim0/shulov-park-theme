@@ -66,17 +66,17 @@ if ( is_front_page() || is_home() ) {
 
 // 2. PRODUCT SCHEMA (Printed on Single WooCommerce Product Pages)
 if ( is_product() && class_exists( 'WooCommerce' ) ) {
-    global $product;
-    if ( $product ) {
-        $product_id   = $product->get_id();
-        $title        = $product->get_name();
-        $short_desc   = $product->get_short_description();
-        $sku          = $product->get_sku();
-        $image_id     = $product->get_image_id();
+    $product_object = wc_get_product( get_the_ID() );
+    if ( is_a( $product_object, 'WC_Product' ) ) {
+        $product_id   = $product_object->get_id();
+        $title        = $product_object->get_name();
+        $short_desc   = $product_object->get_short_description();
+        $sku          = $product_object->get_sku();
+        $image_id     = $product_object->get_image_id();
         $image_url    = $image_id ? wp_get_attachment_image_url( $image_id, 'large' ) : wc_placeholder_img_src();
-        $price        = $product->get_price();
+        $price        = $product_object->get_price();
         $currency     = get_woocommerce_currency();
-        $stock_status = $product->is_in_stock() ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
+        $stock_status = $product_object->is_in_stock() ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
         
         $product_schema = array(
             '@context'    => 'https://schema.org',
@@ -101,8 +101,8 @@ if ( is_product() && class_exists( 'WooCommerce' ) ) {
         }
 
         // Add rating if available
-        $rating = $product->get_average_rating();
-        $count  = $product->get_rating_count();
+        $rating = $product_object->get_average_rating();
+        $count  = $product_object->get_rating_count();
         if ( $rating > 0 && $count > 0 ) {
             $product_schema['aggregateRating'] = array(
                 '@type'       => 'AggregateRating',

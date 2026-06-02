@@ -27,9 +27,10 @@ function shulov_park_is_vite_dev() {
         return $is_dev;
     }
 
-    // Default: try to connect to Vite server with a ultra-short timeout (50ms) to prevent blocking
-    $url = 'http://localhost:5173';
-    $response = wp_remote_get( $url, array( 'timeout' => 0.05, 'sslverify' => false ) );
+    // Default: try to connect to Vite server with a short timeout to prevent blocking.
+    // Using 127.0.0.1 instead of localhost avoids slow DNS lookup on Windows.
+    $url = 'http://127.0.0.1:5173';
+    $response = wp_remote_get( $url, array( 'timeout' => 0.2, 'sslverify' => false ) );
     
     if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
         $is_dev = true;
@@ -55,6 +56,7 @@ function shulov_park_enqueue_vite_assets() {
         // Enqueue the entrypoint JS which loads our CSS dynamically in development
         wp_enqueue_script( 'shulov-park-vite', 'http://localhost:5173/assets/src/js/main.js', array( 'jquery', 'swiper-js' ), null, true );
         
+        $localize_handle = 'shulov-park-vite';
     } else {
         // --- PRODUCTION MODE (Compiled Dist Assets) ---
         // Locate the Vite manifest file. Vite v5 puts it in assets/dist/.vite/manifest.json by default, 
@@ -91,16 +93,20 @@ function shulov_park_enqueue_vite_assets() {
                     wp_enqueue_style( 'shulov-park-prod-css-' . $index, $theme_dir . '/' . $css_file, array(), SHULOV_PARK_VERSION );
                 }
             }
+            
+            $localize_handle = 'shulov-park-prod-js';
         } else {
             // Disaster recovery fallback: If Vite is not running and manifest fails, load theme stylesheet if available
             wp_enqueue_style( 'shulov-park-fallback-css', $theme_dir . '/assets/dist/css/main.css', array(), SHULOV_PARK_VERSION );
             wp_enqueue_script( 'shulov-park-fallback-js', $theme_dir . '/assets/dist/js/main.js', array( 'jquery', 'swiper-js' ), SHULOV_PARK_VERSION, true );
+            
+            $localize_handle = 'shulov-park-fallback-js';
         }
     }
 
     // Localize Script to securely share Ajax configurations and security nonces with Javascript
     wp_localize_script( 
-        shulov_park_is_vite_dev() ? 'shulov-park-vite' : 'shulov-park-prod-js', 
+        $localize_handle, 
         'shulovThemeVars', 
         array(
             'ajaxUrl' => admin_url( 'admin-ajax.php' ),

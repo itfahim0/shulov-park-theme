@@ -26,8 +26,8 @@ $rating       = $product->get_average_rating();
 $rating_count = $product->get_rating_count();
 
 // ACF Custom Fields integration
-$custom_badge = shulov_get_setting( 'shulov_custom_badge' );
-$is_featured  = shulov_get_setting( 'shulov_is_featured_banner' );
+$custom_badge = shulov_get_setting( 'shulov_custom_badge', '', $product_id );
+$is_featured  = (bool) shulov_get_setting( 'shulov_is_featured_banner', false, $product_id );
 
 // Custom Wishlist Check
 $in_wishlist = shulov_park_is_product_in_wishlist( $product_id );
